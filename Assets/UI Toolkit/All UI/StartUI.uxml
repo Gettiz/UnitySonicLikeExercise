@@ -1,0 +1,7 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/StyleSheets/StartUI.uss?fileID=7433441132597879392&amp;guid=958f06e8751be6147ad3951191edd075&amp;type=3#StartUI" />
+    <ui:VisualElement name="Container" class="Container">
+        <ui:VisualElement name="UpperCoroutine" class="UpperCoroutine" style="flex-grow: 1;" />
+        <ui:VisualElement name="ButtomCoroutine" class="ButtomCoroutine" style="flex-grow: 1;" />
+    </ui:VisualElement>
+</ui:UXML>

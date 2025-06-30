@@ -1,0 +1,40 @@
+:root {
+}
+
+.Container {
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.UpperCoroutine {
+    background-color: rgb(87, 0, 0);
+    rotate: -10deg;
+    scale: 2 2;
+    transform-origin: 35% 300%;
+    transition-duration: 4s;
+    transition-timing-function: ease-out-bounce;
+}
+
+.ButtomCoroutine {
+    background-color: rgb(255, 0, 0);
+    rotate: -10deg;
+    scale: 2 2;
+    transform-origin: 65% -200%;
+    transition-duration: 4s;
+    transition-timing-function: ease-out-bounce;
+}
+
+.UpperCoroutineClose {
+    background-color: rgb(87, 0, 0);
+    rotate: -10deg;
+    scale: 2 2;
+    transform-origin: center 160%;
+}
+
+.ButtomCoroutineClose {
+    background-color: rgb(255, 0, 0);
+    rotate: -10deg;
+    scale: 2 2;
+    transform-origin: center -60%;
+}
