@@ -68,13 +68,11 @@ public class StartUI : MonoBehaviour
     {
         foreach (var container in LTRMarquee)
         {
-            Label Text = container.Q<Label>(className: "MarqueeRText");
             StartCoroutine(ScrollText(container));
         }
 
         foreach (var container in RTLMarquee)
         {
-            Label Text = container.Q<Label>(className: "MarqueeLText");
             StartCoroutine(ScrollTextOpposite(container));
         }
     }
@@ -82,7 +80,6 @@ public class StartUI : MonoBehaviour
     IEnumerator ScrollText(VisualElement container)
     {
         float resetA = container.resolvedStyle.width;
-        float initialPos = resetA;
 
         while (true)
         {
@@ -99,7 +96,6 @@ public class StartUI : MonoBehaviour
     IEnumerator ScrollTextOpposite(VisualElement container)
     {
         float resetB = -container.resolvedStyle.width;
-        float initialPos = resetB;
         
         while (true)
         {

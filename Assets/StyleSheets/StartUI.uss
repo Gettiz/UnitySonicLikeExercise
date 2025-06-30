@@ -1,6 +1,51 @@
 :root {
 }
 
+.LTRMarqueeEffect {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    flex-direction: row-reverse;
+    flex-grow: 0;
+    flex-shrink: 1;
+}
+
+.RTLMarqueeEffect {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    flex-direction: row;
+}
+
+.MarqueeLText {
+    font-size: 175px;
+    white-space: nowrap;
+    overflow: visible;
+    -unity-text-align: upper-center;
+    translate: 0 0;
+    width: 100%;
+    margin-right: 0;
+    margin-left: 0;
+    position: relative;
+    -unity-font-definition: url("project://database/Assets/New%20Folder/Poppins-Bold.ttf?fileID=12800000&guid=a1780ce50fa10784f88c5b5a82220daf&type=3#Poppins-Bold");
+    color: rgb(255, 222, 222);
+}
+
+.MarqueeRText {
+    font-size: 175px;
+    white-space: nowrap;
+    overflow: visible;
+    -unity-text-align: upper-center;
+    translate: 0 0;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    -unity-font-definition: url("project://database/Assets/New%20Folder/Poppins-Bold.ttf?fileID=12800000&guid=a1780ce50fa10784f88c5b5a82220daf&type=3#Poppins-Bold");
+    color: rgb(255, 222, 222);
+}
+
 .Coroutine {
     flex-direction: column;
     width: 100%;
@@ -269,45 +314,4 @@
     scale: 1.1 1;
     rotate: 2deg;
     transition-delay: 0s;
-}
-
-.LTRMarqueeEffect {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    flex-direction: row-reverse;
-    flex-grow: 0;
-    flex-shrink: 1;
-}
-
-.RTLMarqueeEffect {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    flex-direction: row;
-}
-
-.MarqueeLText {
-    font-size: 175px;
-    white-space: nowrap;
-    overflow: visible;
-    -unity-text-align: upper-center;
-    translate: 0 0;
-    width: 100%;
-    margin-right: 0;
-    margin-left: 0;
-    position: relative;
-}
-
-.MarqueeRText {
-    font-size: 175px;
-    white-space: nowrap;
-    overflow: visible;
-    -unity-text-align: upper-center;
-    translate: 0 0;
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
 }
