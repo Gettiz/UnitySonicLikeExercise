@@ -1,7 +1,30 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/StyleSheets/StartUI.uss?fileID=7433441132597879392&amp;guid=958f06e8751be6147ad3951191edd075&amp;type=3#StartUI" />
-    <ui:VisualElement name="Container" class="Container">
+    <Style src="project://database/Assets/StyleSheets/StartUI.uss?fileID=7433441132597879392&amp;guid=958f06e8751be6147ad3951191edd075&amp;type=3" />
+    <ui:VisualElement name="Vignette" class="Vignette" />
+    <ui:VisualElement name="Coroutine" class="Coroutine">
         <ui:VisualElement name="UpperCoroutine" class="UpperCoroutine" style="flex-grow: 1;" />
         <ui:VisualElement name="ButtomCoroutine" class="ButtomCoroutine" style="flex-grow: 1;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="LogoPosition" class="LogoPosition">
+        <ui:VisualElement name="Logo" class="Logo" style="transition-duration: 4s; transition-timing-function: ease-in-out-elastic;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="Buttons" class="Buttons" style="flex-grow: 1; rotate: -10deg; scale: 1 1; height: 60%; position: absolute; top: 20%; bottom: 20%;">
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: stretch; justify-content: center; padding-bottom: 0; margin-bottom: 0; margin-top: 0;">
+            <ui:Button name="PlayB" class="LeftButtons">
+                <ui:Label text="Play" style="position: relative; top: 0; right: 0; left: 0; bottom: 0;" />
+            </ui:Button>
+            <ui:Button name="TimeAttackB" class="LeftButtons">
+                <ui:Label text="TimeAttack" />
+            </ui:Button>
+            <ui:Button name="SettingsB" class="LeftButtons">
+                <ui:Label text="Settings" />
+            </ui:Button>
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); justify-content: flex-start; width: auto;" />
+        <ui:VisualElement style="flex-grow: 1; justify-content: space-between;">
+            <ui:Button name="ExitB" class="RightButtons">
+                <ui:Label text="Exit" />
+            </ui:Button>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

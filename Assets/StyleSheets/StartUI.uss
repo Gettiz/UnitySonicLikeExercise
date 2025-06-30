@@ -1,40 +1,272 @@
 :root {
 }
 
-.Container {
+.Coroutine {
     flex-direction: column;
     width: 100%;
     height: 100%;
+    flex-shrink: 0;
+    position: absolute;
 }
 
 .UpperCoroutine {
-    background-color: rgb(87, 0, 0);
+    background-color: rgb(68, 69, 68);
     rotate: -10deg;
     scale: 2 2;
     transform-origin: 35% 300%;
-    transition-duration: 4s;
+    transition-duration: 3s;
     transition-timing-function: ease-out-bounce;
 }
 
 .ButtomCoroutine {
-    background-color: rgb(255, 0, 0);
+    background-color: rgb(68, 69, 68);
     rotate: -10deg;
     scale: 2 2;
     transform-origin: 65% -200%;
-    transition-duration: 4s;
+    transition-duration: 3s;
     transition-timing-function: ease-out-bounce;
 }
 
 .UpperCoroutineClose {
-    background-color: rgb(87, 0, 0);
+    background-color: rgb(68, 69, 68);
     rotate: -10deg;
     scale: 2 2;
     transform-origin: center 160%;
 }
 
 .ButtomCoroutineClose {
-    background-color: rgb(255, 0, 0);
+    background-color: rgb(68, 69, 68);
     rotate: -10deg;
     scale: 2 2;
     transform-origin: center -60%;
+}
+
+.Vignette {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    flex-shrink: 0;
+    background-image: url("project://database/Assets/Textures/UI/Vignette.png?fileID=2800000&guid=a027b20287e697f4e81c5242ee285582&type=3#Vignette");
+}
+
+.LogoPosition {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.Logo {
+    background-size: 100% 100%;
+    background-image: url("project://database/Assets/Textures/UI/GameName.png?fileID=21300000&guid=c5958031809eb364d8e2b131ecd2e9bc&type=3#GameName");
+    width: 30%;
+    height: 30%;
+    transform-origin: center 2000%;
+    rotate: -10deg;
+    position: absolute;
+    top: 10%;
+    left: 5%;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+}
+
+.LogoToScreen {
+    background-size: 100% 100%;
+    background-image: url("project://database/Assets/Textures/UI/GameName.png?fileID=2800000&guid=c5958031809eb364d8e2b131ecd2e9bc&type=3#GameName");
+    width: 30%;
+    height: 30%;
+    transform-origin: top;
+    rotate: -10deg;
+    position: absolute;
+    top: 10%;
+    left: 5%;
+    border-top-color: rgba(0, 0, 0, 0);
+    border-left-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+}
+
+.Buttons {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    flex-direction: row;
+}
+
+.LeftButtons {
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-right: 25px;
+    margin-bottom: 10px;
+    margin-left: 25px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    width: 60%;
+    height: 12%;
+    align-self: center;
+    -unity-font-definition: url("project://database/Assets/New%20Folder/Poppins-Bold.ttf?fileID=12800000&guid=a1780ce50fa10784f88c5b5a82220daf&type=3#Poppins-Bold");
+    font-size: 525%;
+    color: rgb(24, 24, 24);
+    background-color: rgba(255, 255, 255, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    transform-origin: center;
+    translate: -1000px 0;
+    flex-shrink: 0;
+}
+
+.LeftButtonsToScreen {
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-right: 25px;
+    margin-bottom: 10px;
+    margin-left: 25px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    width: 60%;
+    height: 12%;
+    align-self: center;
+    -unity-font-definition: url("project://database/Assets/New%20Folder/Poppins-Bold.ttf?fileID=12800000&guid=a1780ce50fa10784f88c5b5a82220daf&type=3#Poppins-Bold");
+    font-size: 525%;
+    color: rgb(24, 24, 24);
+    background-color: rgba(255, 255, 255, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    transition-duration: 3s, 0.3s, 0.3s, 0.3s;
+    transition-timing-function: ease-in-out-cubic, ease-out-sine, ease-out-sine, ease-out-sine;
+    translate: 1% 0;
+    flex-shrink: 0;
+    background-image: url("project://database/Assets/Textures/UI/Grunge.png?fileID=21300000&guid=1f4832deea4543545aa1e9056e54f0d7&type=3#Grunge");
+    -unity-background-image-tint-color: rgba(255, 255, 255, 0);
+    transition-property: translate, -unity-background-image-tint-color, color, rotate;
+}
+
+.LeftButtonsToScreen:hover {
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-right: 25px;
+    margin-bottom: 10px;
+    margin-left: 25px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    width: 60%;
+    height: 12%;
+    align-self: center;
+    -unity-font-definition: url("project://database/Assets/New%20Folder/Poppins-Bold.ttf?fileID=12800000&guid=a1780ce50fa10784f88c5b5a82220daf&type=3#Poppins-Bold");
+    font-size: 525%;
+    color: rgb(221, 0, 56);
+    background-color: rgba(6, 255, 0, 0);
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out-sine;
+    translate: 1% 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    flex-shrink: 0;
+    background-image: url("project://database/Assets/Textures/UI/Grunge.png?fileID=21300000&guid=1f4832deea4543545aa1e9056e54f0d7&type=3#Grunge");
+    -unity-text-outline-color: rgba(0, 0, 0, 0);
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    scale: 1.05 1;
+    rotate: 2deg;
+    transition-delay: 0s;
+}
+
+.RightButtons {
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-right: 25px;
+    margin-bottom: 10px;
+    margin-left: 25px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    width: 60%;
+    height: 12%;
+    align-self: center;
+    -unity-font-definition: url("project://database/Assets/New%20Folder/Poppins-Bold.ttf?fileID=12800000&guid=a1780ce50fa10784f88c5b5a82220daf&type=3#Poppins-Bold");
+    font-size: 525%;
+    color: rgb(24, 24, 24);
+    background-color: rgba(255, 255, 255, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    transform-origin: center;
+    translate: 1000px 0;
+    flex-shrink: 0;
+}
+
+.RightButtonsToScreen {
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-right: 25px;
+    margin-bottom: 10px;
+    margin-left: 25px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    width: 60%;
+    height: 12%;
+    align-self: center;
+    -unity-font-definition: url("project://database/Assets/New%20Folder/Poppins-Bold.ttf?fileID=12800000&guid=a1780ce50fa10784f88c5b5a82220daf&type=3#Poppins-Bold");
+    font-size: 525%;
+    color: rgb(24, 24, 24);
+    background-color: rgba(255, 255, 255, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    transition-duration: 3s, 0.3s, 0.3s, 0.3s;
+    transition-timing-function: ease-in-out-cubic, ease-out-sine, ease-out-sine, ease-out-sine;
+    translate: 51% 0;
+    flex-shrink: 0;
+    background-image: url("project://database/Assets/Textures/UI/Grunge.png?fileID=21300000&guid=1f4832deea4543545aa1e9056e54f0d7&type=3#Grunge");
+    -unity-background-image-tint-color: rgba(255, 255, 255, 0);
+    transition-property: translate, -unity-background-image-tint-color, color, rotate;
+}
+
+.RightButtonsToScreen:hover {
+    justify-content: flex-start;
+    margin-top: 10px;
+    margin-right: 25px;
+    margin-bottom: 10px;
+    margin-left: 25px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    width: 60%;
+    height: 12%;
+    align-self: center;
+    -unity-font-definition: url("project://database/Assets/New%20Folder/Poppins-Bold.ttf?fileID=12800000&guid=a1780ce50fa10784f88c5b5a82220daf&type=3#Poppins-Bold");
+    font-size: 525%;
+    color: rgb(221, 0, 56);
+    background-color: rgba(255, 255, 255, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out-cubic;
+    translate: 51% 0;
+    flex-shrink: 0;
+    background-image: url("project://database/Assets/Textures/UI/Grunge.png?fileID=21300000&guid=1f4832deea4543545aa1e9056e54f0d7&type=3#Grunge");
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+    scale: 1.1 1;
+    rotate: 2deg;
+    transition-delay: 0s;
 }
