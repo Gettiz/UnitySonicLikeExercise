@@ -17,12 +17,7 @@ public class StartUI : MonoBehaviour
 
     private List<VisualElement> LTRMarquee;
     private List<VisualElement> RTLMarquee;
-    private List<Label> MarqueeLText;
-    private List<Label> MarqueeRText;
     private float speed = 200f;
-    private float resetA;
-    private float resetB;
-
 
     private void Awake()
     {
@@ -39,13 +34,6 @@ public class StartUI : MonoBehaviour
 
         LTRMarquee = root.Query<VisualElement>(className: "LTRMarqueeEffect").ToList();
         RTLMarquee = root.Query<VisualElement>(className: "RTLMarqueeEffect").ToList();
-        MarqueeRText = root.Query<Label>(className: "MarqueeRText").ToList();
-        MarqueeLText = root.Query<Label>(className: "MarqueeLText").ToList();
-
-        //ScoreText = root.Q<Label>("Score");
-
-        //GameOverText.visible = false;
-        //PauseText.visible = false;
     }
 
     private void Start()
@@ -81,25 +69,26 @@ public class StartUI : MonoBehaviour
         foreach (var container in LTRMarquee)
         {
             Label Text = container.Q<Label>(className: "MarqueeRText");
-            StartCoroutine(ScrollText(container, Text));
+            StartCoroutine(ScrollText(container));
         }
 
         foreach (var container in RTLMarquee)
         {
             Label Text = container.Q<Label>(className: "MarqueeLText");
-            StartCoroutine(ScrollTextOpposite(container, Text));
+            StartCoroutine(ScrollTextOpposite(container));
         }
     }
 
-    IEnumerator ScrollText(VisualElement container, Label Text)
+    IEnumerator ScrollText(VisualElement container)
     {
-        resetA = container.resolvedStyle.width;
-
+        float resetA = container.resolvedStyle.width;
+        float initialPos = resetA;
 
         while (true)
         {
+            
             float a = container.transform.position.x + Time.deltaTime * speed;
-            if (a > resetA) a = -container.resolvedStyle.width;
+            if (a > resetA) a = 0;
             
             container.transform.position = new Vector3(a, 0, 0);
 
@@ -107,13 +96,15 @@ public class StartUI : MonoBehaviour
         }
     }
 
-    IEnumerator ScrollTextOpposite(VisualElement container, Label Text)
+    IEnumerator ScrollTextOpposite(VisualElement container)
     {
-        resetB = container.resolvedStyle.width;
+        float resetB = -container.resolvedStyle.width;
+        float initialPos = resetB;
+        
         while (true)
         {
             float b = container.transform.position.x + Time.deltaTime * -speed;
-            if (b < -resetB) b = container.resolvedStyle.width;
+            if (b < resetB) b = 0;
 
             container.transform.position = new Vector3(b, 0, 0);
             yield return null;

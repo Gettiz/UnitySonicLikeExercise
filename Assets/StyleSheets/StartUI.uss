@@ -290,24 +290,24 @@
 }
 
 .MarqueeLText {
-    font-size: 200px;
+    font-size: 175px;
     white-space: nowrap;
     overflow: visible;
-    -unity-text-align: upper-left;
+    -unity-text-align: upper-center;
     translate: 0 0;
     width: 100%;
-    margin-right: 140px;
-    margin-left: 140px;
+    margin-right: 0;
+    margin-left: 0;
     position: relative;
 }
 
 .MarqueeRText {
-    font-size: 200px;
+    font-size: 175px;
     white-space: nowrap;
     overflow: visible;
-    -unity-text-align: upper-right;
+    -unity-text-align: upper-center;
     translate: 0 0;
     width: 100%;
-    margin-left: 140px;
-    margin-right: 140px;
+    margin-left: 0;
+    margin-right: 0;
 }

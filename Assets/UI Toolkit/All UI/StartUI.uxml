@@ -28,15 +28,13 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="MarqueeContainer" style="flex-grow: 1;">
-        <ui:VisualElement name="LTRMarqueeEffect" class="LTRMarqueeEffect" style="flex-direction: row-reverse; translate: 100% 0;">
+        <ui:VisualElement name="LTRMarqueeEffect" class="LTRMarqueeEffect" style="flex-direction: row-reverse; translate: 0% 0;">
             <ui:Label name="MarqueeLText" text="TEXT TEXT TEXT TEXT" class="MarqueeText MarqueeLText" />
             <ui:Label name="MarqueeLText" text="TEXT TEXT TEXT TEXT" class="MarqueeText MarqueeLText" style="translate: 0 0;" />
-            <ui:Label name="MarqueeLText" text="TEXT TEXT TEXT TEXT" class="MarqueeText MarqueeLText" />
         </ui:VisualElement>
-        <ui:VisualElement name="RTLMarqueeEffect" class="RTLMarqueeEffect" style="flex-direction: row; translate: -100% 0;">
-            <ui:Label name="MarqueeRText" text="TEXT TEXT TEXT TEXT" class="MarqueeText MarqueeRText" style="margin-left: 160px; margin-right: 160px;" />
-            <ui:Label name="MarqueeRText" text="TEXT TEXT TEXT TEXT" class="MarqueeText MarqueeRText" style="margin-left: 160px; margin-right: 160px;" />
-            <ui:Label name="MarqueeRText" text="TEXT TEXT TEXT TEXT" class="MarqueeText MarqueeRText" style="margin-left: 160px; margin-right: 160px;" />
+        <ui:VisualElement name="RTLMarqueeEffect" class="RTLMarqueeEffect" style="flex-direction: row; translate: 0% 0;">
+            <ui:Label name="MarqueeRText" text="TEXT TEXT TEXT TEXT" class="MarqueeText MarqueeRText" />
+            <ui:Label name="MarqueeRText" text="TEXT TEXT TEXT TEXT" class="MarqueeText MarqueeRText" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
