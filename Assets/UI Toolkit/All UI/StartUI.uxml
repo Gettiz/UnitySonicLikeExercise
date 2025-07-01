@@ -59,7 +59,7 @@
             <ui:Label name="MarqueeRText" text="TEXT TEXT TEXT TEXT" class="MarqueeText MarqueeRText" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <ui:VisualElement name="Vignette" class="Vignette" />
+    <ui:VisualElement name="Vignette" class="Vignette ShowVignette" style="display: flex;" />
     <ui:VisualElement name="Coroutine" class="Coroutine">
         <ui:VisualElement name="UpperCoroutine" class="UpperCoroutine" style="flex-grow: 1;" />
         <ui:VisualElement name="ButtomCoroutine" class="ButtomCoroutine" style="flex-grow: 1;" />
