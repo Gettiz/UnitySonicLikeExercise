@@ -536,7 +536,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 812571990}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef3a63248c5da57469a54603f8fabcd6, type: 3}
+  m_Script: {fileID: 11500000, guid: 01080be359016724e8ccdf8a8bbd2d06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   HoverButtonSfx: {fileID: 8300000, guid: 6d81a183b51635b47b284a2100bba8e9, type: 3}

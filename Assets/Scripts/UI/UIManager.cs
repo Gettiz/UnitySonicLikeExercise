@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UIElements;
 
-public class StartUI : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
     UIDocument DOM;
     private VisualElement UpperCoroutine;
