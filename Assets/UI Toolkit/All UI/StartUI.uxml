@@ -86,4 +86,5 @@
             </ui:Button>
         </ui:VisualElement>
     </ui:VisualElement>
+    <ui:VisualElement name="ChangeLevelStart" class="ChangeLevelClose" />
 </ui:UXML>

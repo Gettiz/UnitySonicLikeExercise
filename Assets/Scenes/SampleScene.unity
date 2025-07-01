@@ -410,6 +410,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HoverButtonSfx: {fileID: 8300000, guid: 6d81a183b51635b47b284a2100bba8e9, type: 3}
   ClickButtonSfx: {fileID: 8300000, guid: d7c802085f5057141be979ee468f4488, type: 3}
+  SoundTransitionSfx: {fileID: 8300000, guid: 0987a79a0cd4df744be9fe6a5e40c653, type: 3}
 --- !u!114 &812571992
 MonoBehaviour:
   m_ObjectHideFlags: 0

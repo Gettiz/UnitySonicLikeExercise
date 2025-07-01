@@ -91,7 +91,7 @@
     width: 100%;
     height: 100%;
     flex-shrink: 0;
-    background-image: url("project://database/Assets/Textures/UI/Vignette.png?fileID=2800000&guid=a027b20287e697f4e81c5242ee285582&type=3#Vignette");
+    background-image: url("project://database/Assets/Textures/UI/Vignette.png?fileID=21300000&guid=a027b20287e697f4e81c5242ee285582&type=3#Vignette");
     background-color: rgba(0, 0, 0, 0);
     transition-duration: 1s;
     transition-timing-function: ease-in-out;
@@ -390,4 +390,28 @@
     scale: 1.1 1.1;
     rotate: -2deg;
     transition-delay: 0s;
+}
+
+.ChangeLevelClose {
+    background-image: url("project://database/Assets/Textures/UI/CUT.png?fileID=21300000&guid=5e73204889eaf764b9002ee033c3a34b&type=3#CUT");
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 115%;
+    transition-duration: 1s;
+    transition-timing-function: ease-in-out-cubic;
+    translate: 0 -110%;
+}
+
+.ChangeLevelStart {
+    background-image: url("project://database/Assets/Textures/UI/CUT.png?fileID=21300000&guid=5e73204889eaf764b9002ee033c3a34b&type=3#CUT");
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 115%;
+    translate: 0 0%;
+    transition-timing-function: ease-in-out-cubic;
 }

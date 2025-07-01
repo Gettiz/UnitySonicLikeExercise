@@ -11,6 +11,7 @@ public class StartUI : MonoBehaviour
     private VisualElement ButtomCoroutine;
     private VisualElement Logo;
     private VisualElement Vignette;
+    private VisualElement ChangeLevelStart;
 
     private Button Play;
     private Button TimeAttack;
@@ -23,6 +24,7 @@ public class StartUI : MonoBehaviour
 
     public AudioClip HoverButtonSfx;
     public AudioClip ClickButtonSfx;
+    public AudioClip SoundTransitionSfx;
 
     private AudioSource playerAudio;
 
@@ -35,6 +37,7 @@ public class StartUI : MonoBehaviour
         ButtomCoroutine = root.Q<VisualElement>("ButtomCoroutine");
         Logo = root.Q<VisualElement>("Logo");
         Vignette = root.Q<VisualElement>("Vignette");
+        ChangeLevelStart = root.Q<VisualElement>("ChangeLevelStart");
         
         
         Play = root.Q<Button>("PlayB");
@@ -148,12 +151,16 @@ public class StartUI : MonoBehaviour
         Exit.RegisterCallback<ClickEvent>(ExitButton);
         Exit.RegisterCallback<MouseEnterEvent>(HoverButtonSound);
     }
-
     private void PlayButton(ClickEvent evt)
     {
         ClickButtonSound();
+        ChangeLevel();
     }
-
+    private void ChangeLevel()
+    {
+        ChangeLevelStart.AddToClassList("ChangeLevelStart");
+        playerAudio.PlayOneShot(SoundTransitionSfx, 1);
+    }
     private void TimeAttackButton(ClickEvent evt)
     {
         ClickButtonSound();
