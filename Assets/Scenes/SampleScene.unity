@@ -387,30 +387,15 @@ GameObject:
   m_Component:
   - component: {fileID: 812571993}
   - component: {fileID: 812571992}
-  - component: {fileID: 812571991}
   - component: {fileID: 812571994}
+  - component: {fileID: 812571995}
   m_Layer: 5
-  m_Name: StartUI
+  m_Name: UIManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &812571991
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 812571990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b2c89be5802c4245a3a0ea1da1ec403, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  HoverButtonSfx: {fileID: 8300000, guid: 6d81a183b51635b47b284a2100bba8e9, type: 3}
-  ClickButtonSfx: {fileID: 8300000, guid: d7c802085f5057141be979ee468f4488, type: 3}
-  SoundTransitionSfx: {fileID: 8300000, guid: 0987a79a0cd4df744be9fe6a5e40c653, type: 3}
 --- !u!114 &812571992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -425,7 +410,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PanelSettings: {fileID: 11400000, guid: 3f49819179d555f4d9721ee3701d0bc7, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: cd79d81e9c0955b42b2fecc7cfa7be48, type: 3}
+  sourceAsset: {fileID: 9197481963319205126, guid: 09767419eba5a6849a153c569aea1e74, type: 3}
   m_SortingOrder: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
@@ -542,6 +527,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &812571995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812571990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef3a63248c5da57469a54603f8fabcd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HoverButtonSfx: {fileID: 8300000, guid: 6d81a183b51635b47b284a2100bba8e9, type: 3}
+  ClickButtonSfx: {fileID: 8300000, guid: d7c802085f5057141be979ee468f4488, type: 3}
+  SoundTransitionSfx: {fileID: 8300000, guid: 0987a79a0cd4df744be9fe6a5e40c653, type: 3}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

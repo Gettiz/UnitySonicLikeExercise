@@ -108,7 +108,6 @@ public class StartUI : MonoBehaviour
             if (a > resetA) a = 0;
 
             container.transform.position = new Vector3(a, 0, 0);
-
             yield return null;
         }
     }

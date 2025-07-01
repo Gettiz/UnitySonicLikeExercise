@@ -1,0 +1,10 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="StartUI" src="project://database/Assets/UI%20Toolkit/All%20UI/StartUI.uxml?fileID=9197481963319205126&amp;guid=cd79d81e9c0955b42b2fecc7cfa7be48&amp;type=3#StartUI" />
+    <ui:Template name="InGameUI" src="project://database/Assets/UI%20Toolkit/All%20UI/InGameUI.uxml?fileID=9197481963319205126&amp;guid=547c2a69b2be3ed41937f037799d401d&amp;type=3#InGameUI" />
+    <ui:Template name="LoadingUI" src="project://database/Assets/UI%20Toolkit/All%20UI/LoadingUI.uxml?fileID=9197481963319205126&amp;guid=de80dd3328614d54a8f3212487d93306&amp;type=3#LoadingUI" />
+    <ui:Template name="PauseUI" src="project://database/Assets/UI%20Toolkit/All%20UI/PauseUI.uxml?fileID=9197481963319205126&amp;guid=5f72b7214957c0c4b9e2aea654f0aa0b&amp;type=3#PauseUI" />
+    <ui:Instance template="StartUI" name="TStartUI" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0;" />
+    <ui:Instance template="InGameUI" name="TGameUI" />
+    <ui:Instance template="LoadingUI" name="TLoadingUI" />
+    <ui:Instance template="PauseUI" name="TPauseUI" />
+</ui:UXML>
