@@ -166,9 +166,14 @@ namespace DefaultNamespace
                 ChangeLevelStarted = true;
                 ChangeLevelStart.AddToClassList("ChangeLevelStart");
                 playerAudio.PlayOneShot(SoundTransitionSfx, 1);
-                SceneManager.LoadScene("Scenes/Game");
-                CloseTemplateStart?.Invoke();
+                var loadingOperation = SceneManager.LoadSceneAsync("Scenes/Game");
+                loadingOperation.completed += _ => ChangeLevelStart.RegisterCallbackOnce<TransitionEndEvent>(ChangeLevelStartEnd);
             }
+        }
+
+        private void ChangeLevelStartEnd(TransitionEndEvent evt)
+        {
+            CloseTemplateStart?.Invoke();
         }
 
         /*private void StartLevel()

@@ -671,6 +671,9 @@ MonoBehaviour:
   ClickButtonSfx: {fileID: 8300000, guid: d7c802085f5057141be979ee468f4488, type: 3}
   SoundTransitionSfx: {fileID: 8300000, guid: 0987a79a0cd4df744be9fe6a5e40c653, type: 3}
   SoundTransitionFinishSfx: {fileID: 8300000, guid: 9113832232db38e41850b6f603cd1263, type: 3}
+  CloseTemplateStart:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &1632565209
 Transform:
   m_ObjectHideFlags: 0

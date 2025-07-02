@@ -42,13 +42,10 @@ public class UIManager : MonoBehaviour
     }
     public void StartDisableStartUI()
     {
-        Invoke("DisableStartUI",2f);
-    }
-
-    private void DisableStartUI()
-    {
         UxmlStart.style.display = DisplayStyle.None;
     }
+
+    
     private void DontDestroyOnLoad()
     {
         if (Instance != null)
