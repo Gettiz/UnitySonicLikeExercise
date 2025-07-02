@@ -429,6 +429,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1632565209}
+  - {fileID: 1360904620}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &812571994
@@ -543,6 +544,7 @@ MonoBehaviour:
   DOM: {fileID: 812571992}
   playerAudio: {fileID: 812571994}
   TUIStart: {fileID: 1632565208}
+  TUIInGame: {fileID: 1360904621}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -592,6 +594,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1360904619
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1360904620}
+  - component: {fileID: 1360904621}
+  m_Layer: 0
+  m_Name: UIGame
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1360904620
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1360904619}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 812571993}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1360904621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1360904619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be8e769a411a42acbc3c9d900c7fb059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1632565207
 GameObject:
   m_ObjectHideFlags: 0
@@ -624,6 +670,7 @@ MonoBehaviour:
   HoverButtonSfx: {fileID: 8300000, guid: 6d81a183b51635b47b284a2100bba8e9, type: 3}
   ClickButtonSfx: {fileID: 8300000, guid: d7c802085f5057141be979ee468f4488, type: 3}
   SoundTransitionSfx: {fileID: 8300000, guid: 0987a79a0cd4df744be9fe6a5e40c653, type: 3}
+  SoundTransitionFinishSfx: {fileID: 8300000, guid: 9113832232db38e41850b6f603cd1263, type: 3}
 --- !u!4 &1632565209
 Transform:
   m_ObjectHideFlags: 0

@@ -2,12 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 namespace DefaultNamespace
 {
     public class TemplateUIStart : MonoBehaviour
     {
         UIDocument DOM;
+        private AudioSource playerAudio;
+        
         private VisualElement UpperCoroutine;
         private VisualElement ButtomCoroutine;
         private VisualElement Logo;
@@ -27,9 +31,43 @@ namespace DefaultNamespace
         public AudioClip HoverButtonSfx;
         public AudioClip ClickButtonSfx;
         public AudioClip SoundTransitionSfx;
+        public AudioClip SoundTransitionFinishSfx;
+        
+        public UnityEvent CloseTemplateStart;
+        
+        public void Config(UIDocument uiDocument, AudioSource audioSource)
+        {
+            DOM = uiDocument;
+            playerAudio = audioSource;
+            VisualElement root = DOM.rootVisualElement;
 
-        private AudioSource playerAudio;
+            UpperCoroutine = root.Q<VisualElement>("UpperCoroutine");
+            ButtomCoroutine = root.Q<VisualElement>("ButtomCoroutine");
+            Logo = root.Q<VisualElement>("Logo");
+            Vignette = root.Q<VisualElement>("Vignette");
+            ChangeLevelStart = root.Q<VisualElement>("ChangeLevelStart");
 
+            Play = root.Q<Button>("PlayB");
+            TimeAttack = root.Q<Button>("TimeAttackB");
+            Settings = root.Q<Button>("SettingsB");
+            Exit = root.Q<Button>("ExitB");
+
+            LTRMarquee = root.Query<VisualElement>(className: "LTRMarqueeEffect").ToList();
+            RTLMarquee = root.Query<VisualElement>(className: "RTLMarqueeEffect").ToList();
+
+            Play.RegisterCallback<ClickEvent>(PlayButton);
+            Play.RegisterCallback<MouseEnterEvent>(HoverButtonSound);
+
+            TimeAttack.RegisterCallback<ClickEvent>(TimeAttackButton);
+            TimeAttack.RegisterCallback<MouseEnterEvent>(HoverButtonSound);
+
+            Settings.RegisterCallback<ClickEvent>(SettingsButton);
+            Settings.RegisterCallback<MouseEnterEvent>(HoverButtonSound);
+
+            Exit.RegisterCallback<ClickEvent>(ExitButton);
+            Exit.RegisterCallback<MouseEnterEvent>(HoverButtonSound);
+        }
+        
         public void TInitStart()
         {
             Invoke("CoroutineToClose", 0.1f);
@@ -125,12 +163,20 @@ namespace DefaultNamespace
         {
             if (!ChangeLevelStarted)
             {
+                ChangeLevelStarted = true;
                 ChangeLevelStart.AddToClassList("ChangeLevelStart");
                 playerAudio.PlayOneShot(SoundTransitionSfx, 1);
-                ChangeLevelStarted = true;
+                SceneManager.LoadScene("Scenes/Game");
+                CloseTemplateStart?.Invoke();
             }
         }
 
+        /*private void StartLevel()
+        {
+            ChangeLevelStart.RemoveFromClassList("ChangeLevelStart");
+            playerAudio.PlayOneShot(SoundTransitionFinishSfx, 1);
+        }*/
+        
         private void TimeAttackButton(ClickEvent evt)
         {
             ClickButtonSound();
@@ -146,37 +192,6 @@ namespace DefaultNamespace
             ClickButtonSound();
         }
 
-        public void Config(UIDocument uiDocument, AudioSource audioSource)
-        {
-            DOM = uiDocument;
-            playerAudio = audioSource;
-            VisualElement root = DOM.rootVisualElement;
-
-            UpperCoroutine = root.Q<VisualElement>("UpperCoroutine");
-            ButtomCoroutine = root.Q<VisualElement>("ButtomCoroutine");
-            Logo = root.Q<VisualElement>("Logo");
-            Vignette = root.Q<VisualElement>("Vignette");
-            ChangeLevelStart = root.Q<VisualElement>("ChangeLevelStart");
-
-            Play = root.Q<Button>("PlayB");
-            TimeAttack = root.Q<Button>("TimeAttackB");
-            Settings = root.Q<Button>("SettingsB");
-            Exit = root.Q<Button>("ExitB");
-
-            LTRMarquee = root.Query<VisualElement>(className: "LTRMarqueeEffect").ToList();
-            RTLMarquee = root.Query<VisualElement>(className: "RTLMarqueeEffect").ToList();
-
-            Play.RegisterCallback<ClickEvent>(PlayButton);
-            Play.RegisterCallback<MouseEnterEvent>(HoverButtonSound);
-
-            TimeAttack.RegisterCallback<ClickEvent>(TimeAttackButton);
-            TimeAttack.RegisterCallback<MouseEnterEvent>(HoverButtonSound);
-
-            Settings.RegisterCallback<ClickEvent>(SettingsButton);
-            Settings.RegisterCallback<MouseEnterEvent>(HoverButtonSound);
-
-            Exit.RegisterCallback<ClickEvent>(ExitButton);
-            Exit.RegisterCallback<MouseEnterEvent>(HoverButtonSound);
-        }
+        
     }
 }
