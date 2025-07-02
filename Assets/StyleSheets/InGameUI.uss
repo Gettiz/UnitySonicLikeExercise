@@ -1,0 +1,26 @@
+:root {
+}
+
+.ChangeLevelCloseInGame {
+    background-image: url("project://database/Assets/Textures/UI/CUT.png?fileID=21300000&guid=5e73204889eaf764b9002ee033c3a34b&type=3#CUT");
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 115%;
+    transition-duration: 1s;
+    transition-timing-function: ease-in-out-cubic;
+    translate: 0 0%;
+}
+
+.ChangeLevelStartInGame {
+    background-image: url("project://database/Assets/Textures/UI/CUT.png?fileID=21300000&guid=5e73204889eaf764b9002ee033c3a34b&type=3#CUT");
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 115%;
+    translate: 0 110%;
+    transition-timing-function: ease-in-out-cubic;
+}

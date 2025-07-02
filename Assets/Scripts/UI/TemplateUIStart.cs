@@ -11,6 +11,7 @@ namespace DefaultNamespace
     {
         UIDocument DOM;
         private AudioSource playerAudio;
+        public UnityEvent ChangeBoolInGame;
         
         private VisualElement UpperCoroutine;
         private VisualElement ButtomCoroutine;
@@ -163,6 +164,7 @@ namespace DefaultNamespace
         {
             if (!ChangeLevelStarted)
             {
+                ChangeBoolInGame?.Invoke();
                 ChangeLevelStarted = true;
                 ChangeLevelStart.AddToClassList("ChangeLevelStart");
                 playerAudio.PlayOneShot(SoundTransitionSfx, 1);

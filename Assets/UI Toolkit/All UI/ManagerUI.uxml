@@ -3,8 +3,8 @@
     <ui:Template name="InGameUI" src="project://database/Assets/UI%20Toolkit/All%20UI/InGameUI.uxml?fileID=9197481963319205126&amp;guid=547c2a69b2be3ed41937f037799d401d&amp;type=3#InGameUI" />
     <ui:Template name="LoadingUI" src="project://database/Assets/UI%20Toolkit/All%20UI/LoadingUI.uxml?fileID=9197481963319205126&amp;guid=de80dd3328614d54a8f3212487d93306&amp;type=3#LoadingUI" />
     <ui:Template name="PauseUI" src="project://database/Assets/UI%20Toolkit/All%20UI/PauseUI.uxml?fileID=9197481963319205126&amp;guid=5f72b7214957c0c4b9e2aea654f0aa0b&amp;type=3#PauseUI" />
-    <ui:Instance template="StartUI" name="TStartUI" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; overflow: visible; display: flex;" />
-    <ui:Instance template="InGameUI" name="TGameUI" />
-    <ui:Instance template="LoadingUI" name="TLoadingUI" />
-    <ui:Instance template="PauseUI" name="TPauseUI" />
+    <ui:Instance template="StartUI" name="TStartUI" enabled="true" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; overflow: visible; display: none;" />
+    <ui:Instance template="InGameUI" name="TGameUI" style="display: none; position: absolute; top: 0; left: 0; bottom: 0; right: 0;" />
+    <ui:Instance template="LoadingUI" name="TLoadingUI" style="display: none;" />
+    <ui:Instance template="PauseUI" name="TPauseUI" style="display: none;" />
 </ui:UXML>

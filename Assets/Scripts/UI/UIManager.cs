@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DefaultNamespace;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
@@ -9,6 +10,8 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
+    public UnityEvent InGameUI;
+    
     private VisualElement UxmlStart;
     private VisualElement UxmlGame;
     private VisualElement UxmlLoading;
@@ -22,16 +25,18 @@ public class UIManager : MonoBehaviour
     
     [SerializeField] private TemplateUIStart TUIStart;
     [SerializeField] private TemplateUIInGame TUIInGame;
-    [SerializeField] private TemplateUIInGame TUIPause;
+    [SerializeField] private TemplateUIPause TUIPause;
+    
+    
 
     public void Awake()
     {
         DontDestroyOnLoad();
 
-        VisualElement root = DOM.rootVisualElement;
+        VisualElement root = DOM?.rootVisualElement;
         UxmlStart = root.Q<VisualElement>("TStartUI");
         UxmlGame = root.Q<VisualElement>("TGameUI");
-        //UxmlLoading = root.Q<VisualElement>("TLoadingUI");
+        UxmlLoading = root.Q<VisualElement>("TLoadingUI");
         UxmlPause = root.Q<VisualElement>("TPauseUI");
 
         TUIStart.Config(DOM, playerAudio);
@@ -41,17 +46,8 @@ public class UIManager : MonoBehaviour
         UxmlStart.style.display = DisplayStyle.None;
         UxmlGame.style.display = DisplayStyle.None;
         UxmlPause.style.display = DisplayStyle.None;
-
-        SceneManager.GetSceneByName(sceneName);
-        switch (sceneName)
-        {
-            case "Scenes/Menu":
-                UxmlStart.style.display = DisplayStyle.Flex;
-                break;
-            case "Scenes/Game":
-                UxmlGame.style.display = DisplayStyle.Flex;
-                break;
-        }
+        
+        DisplayUIByScene();
     }
 
     private void Start()
@@ -63,9 +59,26 @@ public class UIManager : MonoBehaviour
         TUIStart.CloseTemplateStart.AddListener(StartDisableStartUI);
     }
 
+    private void DisplayUIByScene()
+    {
+        sceneName = SceneManager.GetActiveScene().name;
+        Debug.Log(sceneName);
+        switch (sceneName)
+        {
+            case "Menu":
+                UxmlStart.style.display = DisplayStyle.Flex;
+                break;
+            case "Game":
+                UxmlGame.style.display = DisplayStyle.Flex;
+                InGameUI?.Invoke();
+                break;
+        }
+    }
+
     public void StartDisableStartUI()
     {
         UxmlStart.style.display = DisplayStyle.None;
+        DisplayUIByScene();
     }
 
 
