@@ -1,11 +1,14 @@
 using System;
 using System.Collections;
+using DefaultNamespace;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] GameObject persistentUI;
+    public UnityEvent TUIInGame;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
@@ -14,7 +17,7 @@ public class PlayerController : MonoBehaviour
         {
             Instantiate(persistentUI);
         }
-
+        TemplateUIInGame.SetGameStartedFlag(true);
     }
 
     void Start()

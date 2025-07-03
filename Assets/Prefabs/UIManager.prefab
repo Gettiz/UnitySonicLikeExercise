@@ -45,7 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uIManager: {fileID: 2305357958477897675}
+  StartLevelUI: {fileID: 6850848580313747023}
   SoundTransitionStartSfx: {fileID: 8300000, guid: 9113832232db38e41850b6f603cd1263, type: 3}
+  gameHasStarted: 0
 --- !u!1 &4009570006957605634
 GameObject:
   m_ObjectHideFlags: 0
@@ -90,6 +92,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 433e8f69ec5a43ba9a77eb4d127a648c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ChangeBoolInGame:
+    m_PersistentCalls:
+      m_Calls: []
   HoverButtonSfx: {fileID: 8300000, guid: 6d81a183b51635b47b284a2100bba8e9, type: 3}
   ClickButtonSfx: {fileID: 8300000, guid: d7c802085f5057141be979ee468f4488, type: 3}
   SoundTransitionSfx: {fileID: 8300000, guid: 0987a79a0cd4df744be9fe6a5e40c653, type: 3}

@@ -39,15 +39,15 @@ public class UIManager : MonoBehaviour
         UxmlLoading = root.Q<VisualElement>("TLoadingUI");
         UxmlPause = root.Q<VisualElement>("TPauseUI");
 
-        TUIStart.Config(DOM, playerAudio);
-        TUIInGame.Config(DOM, playerAudio);
-        TUIPause.Config(DOM, playerAudio);
-
         UxmlStart.style.display = DisplayStyle.None;
         UxmlGame.style.display = DisplayStyle.None;
         UxmlPause.style.display = DisplayStyle.None;
         
         DisplayUIByScene();
+        
+        TUIStart.Config(DOM, playerAudio);
+        TUIInGame.Config(DOM, playerAudio);
+        TUIPause.Config(DOM, playerAudio);
     }
 
     private void Start()
@@ -70,11 +70,15 @@ public class UIManager : MonoBehaviour
                 break;
             case "Game":
                 UxmlGame.style.display = DisplayStyle.Flex;
-                InGameUI?.Invoke();
+                Invoke("DelayInvokeEventGameMethod",1.0f);
                 break;
         }
     }
 
+    private void DelayInvokeEventGameMethod()
+    {
+        InGameUI?.Invoke();
+    }
     public void StartDisableStartUI()
     {
         UxmlStart.style.display = DisplayStyle.None;

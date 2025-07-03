@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 
 namespace DefaultNamespace
@@ -10,16 +11,19 @@ namespace DefaultNamespace
     {
         [SerializeField] private UIManager uIManager;
         [SerializeField] private TemplateUIStart StartLevelUI;
-
+        
         UIDocument DOM;
         private AudioSource playerAudio;
 
         private VisualElement ChangeLevelStart;
 
         public AudioClip SoundTransitionStartSfx;
-
+        
         private bool levelHasStarted = false;
-        public bool gameHasStarted = false;
+        
+        public static TemplateUIInGame Instance { get; private set; }
+        public static bool gameHasStarted = false;
+        
 
         public void Config(UIDocument uiDocument, AudioSource audioSource)
         {
@@ -29,22 +33,31 @@ namespace DefaultNamespace
 
             ChangeLevelStart = root.Q<VisualElement>("ChangeLevelInGame");
 
-            //Events
+            Instance = this;
+
+            StartLevelUI.ChangeBoolInGame?.AddListener(GameStarted);
+            uIManager.InGameUI?.AddListener(StartLevel);
         }
 
         public void TInitInStart()
         {
-            uIManager.InGameUI.AddListener(StartLevel);
-            StartLevelUI.ChangeBoolInGame.AddListener(GameStarted);
-            Invoke("StartLevel",0.1f);
+            
+            
+        }
+        
+        public static void SetGameStartedFlag(bool started)
+        {
+            gameHasStarted = started;
         }
 
         private void GameStarted()
         {
             gameHasStarted = true;
         }
+        
         private void StartLevel()
         {
+            Debug.Log("Transition called");
             if (!levelHasStarted && gameHasStarted)
             {
                 playerAudio.PlayOneShot(SoundTransitionStartSfx, 1);
