@@ -74,6 +74,10 @@
     transition-property: translate, -unity-background-image-tint-color, color, rotate;
     transition-duration: 3s, 0.3s, 0.3s, 0.3s;
     transition-timing-function: ease-in-cubic, ease-out-sine, ease-out-sine, ease-out-sine;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
 }
 
 .TextButtonStyle:hover {
@@ -91,7 +95,7 @@
     -unity-font-definition: url("project://database/Assets/Font/Poppins-Bold.ttf?fileID=12800000&guid=a1780ce50fa10784f88c5b5a82220daf&type=3#Poppins-Bold");
     background-image: url("project://database/Assets/Textures/UI/Grunge.png?fileID=21300000&guid=1f4832deea4543545aa1e9056e54f0d7&type=3#Grunge");
     background-color: rgba(0, 0, 0, 0);
-    color: rgb(255, 255, 255);
+    color: rgb(221, 0, 56);
     -unity-background-image-tint-color: rgb(255, 255, 255);
     transition-duration: 0.3s;
     transition-timing-function: ease-out-sine;

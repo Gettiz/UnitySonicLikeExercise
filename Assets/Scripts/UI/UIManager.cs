@@ -43,6 +43,7 @@ public class UIManager : MonoBehaviour
 
         UxmlStart.style.display = DisplayStyle.None;
         UxmlGame.style.display = DisplayStyle.None;
+        UxmlPause.style.display = DisplayStyle.None;
         
         DisplayUIByScene();
         
@@ -55,7 +56,7 @@ public class UIManager : MonoBehaviour
     {
         TUIStart.TInitStart();
         TUIInGame.TInitInStart();
-        TUIPause.TInitInStart();
+        
 
         TUIStart.CloseTemplateStart.AddListener(StartDisableStartUI);
         
@@ -80,6 +81,8 @@ public class UIManager : MonoBehaviour
                 break;
             case "Game":
                 UxmlGame.style.display = DisplayStyle.Flex;
+                UxmlPause.style.display = DisplayStyle.Flex;
+                TUIPause.TInitInStart();
                 Invoke("DelayInvokeEventGameMethod",1.0f);
                 break;
         }

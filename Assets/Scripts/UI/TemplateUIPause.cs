@@ -34,7 +34,7 @@ namespace DefaultNamespace
             
             LTRMarqueePause = root.Query<VisualElement>(className: "LTRMarqueeEffectPause").ToList();
             RTLMarqueePause = root.Query<VisualElement>(className: "RTLMarqueeEffectPause").ToList();
-
+            PauseMenu.style.visibility = Visibility.Hidden;
         }
 
         public void ChangePause()
@@ -42,19 +42,19 @@ namespace DefaultNamespace
             Debug.Log("PauseInvokeMade");
             if (IsPaused)
             {
-                PauseMenu.style.display = DisplayStyle.None;
+                PauseMenu.style.visibility = Visibility.Hidden;
                 IsPaused = false;
             }
             else
             {
-                PauseMenu.style.display = DisplayStyle.Flex;
+                PauseMenu.style.visibility = Visibility.Visible;
                 IsPaused = true;
             }
         }
 
         public void TInitInStart()
         {
-            Invoke("SetupMarqueesPause",0.1f);
+            Invoke("SetupMarqueesPause",0.5f);
         }
         
         private void SetupMarqueesPause()
@@ -68,7 +68,6 @@ namespace DefaultNamespace
             {
                 StartCoroutine(ScrollTextOppositePause(containerPause));
             }
-            PauseMenu.style.display = DisplayStyle.None;
         }
         
         IEnumerator ScrollTextPause(VisualElement containerPause)
