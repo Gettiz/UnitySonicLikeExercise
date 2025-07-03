@@ -345,6 +345,7 @@ GameObject:
   - component: {fileID: 1883213678}
   - component: {fileID: 1883213677}
   - component: {fileID: 1883213681}
+  - component: {fileID: 1883213682}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -454,6 +455,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   persistentUI: {fileID: 9161477429024096240, guid: 8bf45900f67cfa44ab55717ee8de3981, type: 3}
+  TUIInGame:
+    m_PersistentCalls:
+      m_Calls: []
+  playerInput: {fileID: 1883213682}
+--- !u!114 &1883213682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883213676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: ed84b150632ae6b46aeadcc88864e8a3, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8fa9625e-7d4d-4fbb-8eb9-aa5a9aaa7de1
+    m_ActionName: 'Player/Pause[/Keyboard/p,/Keyboard/escape]'
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

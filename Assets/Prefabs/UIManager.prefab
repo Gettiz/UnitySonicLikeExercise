@@ -47,7 +47,6 @@ MonoBehaviour:
   uIManager: {fileID: 2305357958477897675}
   StartLevelUI: {fileID: 6850848580313747023}
   SoundTransitionStartSfx: {fileID: 8300000, guid: 9113832232db38e41850b6f603cd1263, type: 3}
-  gameHasStarted: 0
 --- !u!1 &4009570006957605634
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,6 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5558d94383415d4799f21d7de52d156, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uIManagerForP: {fileID: 2305357958477897675}
 --- !u!1 &9161477429024096240
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,6 +158,7 @@ GameObject:
   - component: {fileID: 8970902058929006948}
   - component: {fileID: 6090572032764436077}
   - component: {fileID: 2305357958477897675}
+  - component: {fileID: 4460165214727426670}
   m_Layer: 5
   m_Name: UIManager
   m_TagString: Untagged
@@ -314,8 +315,42 @@ MonoBehaviour:
   InGameUI:
     m_PersistentCalls:
       m_Calls: []
+  PauseUI:
+    m_PersistentCalls:
+      m_Calls: []
   DOM: {fileID: 8970902058929006948}
   playerAudio: {fileID: 6090572032764436077}
   TUIStart: {fileID: 6850848580313747023}
   TUIInGame: {fileID: 5062918017750317072}
   TUIPause: {fileID: 1677346777745778963}
+  uIInput: {fileID: 4460165214727426670}
+--- !u!114 &4460165214727426670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9161477429024096240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: ed84b150632ae6b46aeadcc88864e8a3, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}

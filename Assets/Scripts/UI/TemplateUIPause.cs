@@ -9,14 +9,38 @@ namespace DefaultNamespace
     {
         UIDocument DOM;
         private AudioSource playerAudio;
+
+        [SerializeField] private UIManager uIManagerForP;
+        
+        private VisualElement Color;
+        
+        private bool IsPaused = false;
             
         public void Config(UIDocument uiDocument, AudioSource audioSource)
         {
             DOM = uiDocument;
             playerAudio = audioSource;
             VisualElement root = DOM.rootVisualElement;
-                
-            //Events
+            
+            Color = root.Q<VisualElement>("ColorPause");
+            
+
+            uIManagerForP.PauseUI?.AddListener(ChangePause);
+        }
+
+        public void ChangePause()
+        {
+            Debug.Log("PauseInvokeMade");
+            if (IsPaused)
+            {
+                Color.RemoveFromClassList("ChangeColorPause");
+                IsPaused = false;
+            }
+            else
+            {
+                Color.AddToClassList("ChangeColorPause");
+                IsPaused = true;
+            }
         }
         public void TInitInStart()
         {

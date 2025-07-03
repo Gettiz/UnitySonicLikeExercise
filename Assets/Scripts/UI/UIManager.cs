@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
@@ -11,6 +12,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
 
     public UnityEvent InGameUI;
+    public UnityEvent PauseUI;
     
     private VisualElement UxmlStart;
     private VisualElement UxmlGame;
@@ -27,7 +29,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TemplateUIInGame TUIInGame;
     [SerializeField] private TemplateUIPause TUIPause;
     
-    
+    public PlayerInput uIInput;
 
     public void Awake()
     {
@@ -41,7 +43,6 @@ public class UIManager : MonoBehaviour
 
         UxmlStart.style.display = DisplayStyle.None;
         UxmlGame.style.display = DisplayStyle.None;
-        UxmlPause.style.display = DisplayStyle.None;
         
         DisplayUIByScene();
         
@@ -57,8 +58,17 @@ public class UIManager : MonoBehaviour
         TUIPause.TInitInStart();
 
         TUIStart.CloseTemplateStart.AddListener(StartDisableStartUI);
+        
+        Instance ??= FindFirstObjectByType<UIManager>();
+
+        uIInput.actions["Pause"].performed += ChangePause;
     }
 
+    public void ChangePause(InputAction.CallbackContext uiContext)
+    {
+        PauseUI?.Invoke();
+    }
+    
     private void DisplayUIByScene()
     {
         sceneName = SceneManager.GetActiveScene().name;
@@ -85,7 +95,6 @@ public class UIManager : MonoBehaviour
         DisplayUIByScene();
     }
 
-
     private void DontDestroyOnLoad()
     {
         if (Instance != null)
@@ -96,8 +105,5 @@ public class UIManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
-
-    void Update()
-    {
-    }
+    
 }

@@ -42,7 +42,6 @@ namespace DefaultNamespace
         public void TInitInStart()
         {
             
-            
         }
         
         public static void SetGameStartedFlag(bool started)
@@ -57,7 +56,6 @@ namespace DefaultNamespace
         
         private void StartLevel()
         {
-            Debug.Log("Transition called");
             if (!levelHasStarted && gameHasStarted)
             {
                 playerAudio.PlayOneShot(SoundTransitionStartSfx, 1);

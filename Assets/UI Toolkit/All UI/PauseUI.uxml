@@ -1,9 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ui:UXML
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ui="UnityEngine.UIElements"
-    xmlns:uie="UnityEditor.UIElements"
-    xsi:noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd"
->
-    
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/StyleSheets/PauseUI.uss?fileID=7433441132597879392&amp;guid=ea72ae70b320d06419c5956a960557c5&amp;type=3#PauseUI" />
+    <ui:VisualElement style="flex-grow: 1; position: absolute; top: 10%; bottom: 10%; left: 10%; right: 10%;">
+        <ui:VisualElement name="ColorPause" class="ColorPause" style="flex-grow: 1;" />
+    </ui:VisualElement>
 </ui:UXML>

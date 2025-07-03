@@ -6,5 +6,5 @@
     <ui:Instance template="StartUI" name="TStartUI" enabled="true" style="position: absolute; top: 0; left: 0; bottom: 0; right: 0; overflow: visible; display: none;" />
     <ui:Instance template="InGameUI" name="TGameUI" style="display: none; position: absolute; top: 0; left: 0; bottom: 0; right: 0;" />
     <ui:Instance template="LoadingUI" name="TLoadingUI" style="display: none;" />
-    <ui:Instance template="PauseUI" name="TPauseUI" style="display: none;" />
+    <ui:Instance template="PauseUI" name="TPauseUI" style="display: flex; position: absolute; top: 0; bottom: 0; right: 0; left: 0;" />
 </ui:UXML>

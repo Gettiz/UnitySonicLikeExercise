@@ -177,12 +177,6 @@ namespace DefaultNamespace
         {
             CloseTemplateStart?.Invoke();
         }
-
-        /*private void StartLevel()
-        {
-            ChangeLevelStart.RemoveFromClassList("ChangeLevelStart");
-            playerAudio.PlayOneShot(SoundTransitionFinishSfx, 1);
-        }*/
         
         private void TimeAttackButton(ClickEvent evt)
         {
@@ -198,7 +192,6 @@ namespace DefaultNamespace
         {
             ClickButtonSound();
         }
-
         
     }
 }
