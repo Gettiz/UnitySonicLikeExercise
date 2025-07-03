@@ -415,3 +415,11 @@
     translate: 0 0%;
     transition-timing-function: ease-in-out-cubic;
 }
+
+.RTLMarqueeEffectPause {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    flex-direction: row;
+}

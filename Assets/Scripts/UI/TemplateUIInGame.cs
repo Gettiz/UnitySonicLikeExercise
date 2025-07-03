@@ -58,9 +58,9 @@ namespace DefaultNamespace
         {
             if (!levelHasStarted && gameHasStarted)
             {
+                levelHasStarted = true;
                 playerAudio.PlayOneShot(SoundTransitionStartSfx, 1);
                 ChangeLevelStart.AddToClassList("ChangeLevelStartInGame");
-                levelHasStarted = true;
             }
         }
     }
