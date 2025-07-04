@@ -61,7 +61,7 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement style="flex-grow: 1; position: absolute; top: 10%; right: 30%; left: 30%; bottom: 10%;">
+        <ui:VisualElement style="flex-grow: 1; position: absolute; top: 10%; right: 30%; left: 30%; bottom: 10%; border-top-left-radius: 50px; border-top-right-radius: 52px; border-bottom-right-radius: 52px; border-bottom-left-radius: 52px; background-color: rgba(255, 255, 255, 0.39);">
             <ui:VisualElement name="ContainerButton" class="ContainerButtonWindow" style="flex-grow: 1;">
                 <ui:Button text="Resume" name="ResumeButton" class="TextButtonStyle" />
             </ui:VisualElement>

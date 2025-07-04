@@ -146,6 +146,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uIManagerForP: {fileID: 2305357958477897675}
+  HoverButtonPauseSfx: {fileID: 8300000, guid: 6d81a183b51635b47b284a2100bba8e9, type: 3}
+  ClickButtonPauseSfx: {fileID: 8300000, guid: d7c802085f5057141be979ee468f4488, type: 3}
 --- !u!1 &9161477429024096240
 GameObject:
   m_ObjectHideFlags: 0

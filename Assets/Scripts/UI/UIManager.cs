@@ -35,7 +35,7 @@ public class UIManager : MonoBehaviour
     {
         DontDestroyOnLoad();
 
-        VisualElement root = DOM?.rootVisualElement;
+        VisualElement root = DOM.rootVisualElement;
         UxmlStart = root.Q<VisualElement>("TStartUI");
         UxmlGame = root.Q<VisualElement>("TGameUI");
         UxmlLoading = root.Q<VisualElement>("TLoadingUI");
@@ -100,9 +100,11 @@ public class UIManager : MonoBehaviour
 
     private void DontDestroyOnLoad()
     {
-        if (Instance != null)
+        if (Instance != null && Instance == this)
         {
+            Debug.Log("Duplicated UI Instance found");
             Destroy(gameObject);
+            return;
         }
 
         Instance = this;
