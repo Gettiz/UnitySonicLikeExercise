@@ -73,7 +73,7 @@
                 <ui:Label text="Play" style="position: relative; top: 0; right: 0; left: 0; bottom: 0;" />
             </ui:Button>
             <ui:Button name="TimeAttackB" class="LeftButtons">
-                <ui:Label text="TimeAttack" />
+                <ui:Label text="Time Attack" />
             </ui:Button>
             <ui:Button name="SettingsB" class="LeftButtons">
                 <ui:Label text="Settings" />

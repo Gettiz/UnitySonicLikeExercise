@@ -9,6 +9,8 @@
     flex-direction: row-reverse;
     flex-grow: 0;
     flex-shrink: 1;
+    margin-left: -10%;
+    margin-right: -10%;
 }
 
 .RTLMarqueeEffectPause {
@@ -17,6 +19,8 @@
     height: 100%;
     overflow: visible;
     flex-direction: row;
+    margin-left: -10%;
+    margin-right: -10%;
 }
 
 .MarqueeLTextPause {

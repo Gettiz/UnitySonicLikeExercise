@@ -22,10 +22,12 @@ namespace DefaultNamespace
         
         public AudioClip HoverButtonPauseSfx;
         public AudioClip ClickButtonPauseSfx;
+        public AudioClip GamePaused;
+        public AudioClip GameUnpaused;
         
         private List<VisualElement> LTRMarqueePause;
         private List<VisualElement> RTLMarqueePause;
-        private float speed = 200f;
+        private float speed = 100f;
         
         private bool IsPaused = false;
         private bool BackToMenuHasStarted = false;
@@ -118,11 +120,13 @@ namespace DefaultNamespace
             if (IsPaused)
             {
                 PauseMenu.style.visibility = Visibility.Hidden;
+                playerAudio.PlayOneShot(GameUnpaused,1);
                 IsPaused = false;
             }
             else
             {
                 PauseMenu.style.visibility = Visibility.Visible;
+                playerAudio.PlayOneShot(GamePaused,1);
                 IsPaused = true;
             }
         }
