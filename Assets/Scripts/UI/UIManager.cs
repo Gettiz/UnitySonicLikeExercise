@@ -25,9 +25,9 @@ public class UIManager : MonoBehaviour
 
     private string sceneName;
     
-    [SerializeField] private TemplateUIStart TUIStart;
-    [SerializeField] private TemplateUIInGame TUIInGame;
-    [SerializeField] private TemplateUIPause TUIPause;
+    [SerializeField] public TemplateUIStart TUIStart;
+    [SerializeField] public TemplateUIInGame TUIInGame;
+    [SerializeField] public TemplateUIPause TUIPause;
     
     public PlayerInput uIInput;
 
@@ -59,8 +59,8 @@ public class UIManager : MonoBehaviour
         
 
         TUIStart.CloseTemplateStart.AddListener(StartDisableStartUI);
-        
-        Instance ??= FindFirstObjectByType<UIManager>();
+
+        Instance = this;
 
         uIInput.actions["Pause"].performed += ChangePause;
     }

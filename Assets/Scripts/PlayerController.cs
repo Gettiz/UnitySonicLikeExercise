@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
         {
             Instantiate(persistentUI);
         }
-        TemplateUIInGame.SetGameStartedFlag(true);
+        UIManager.Instance.TUIInGame.SetGameStartedFlag(true);
     }
 
     void Start()

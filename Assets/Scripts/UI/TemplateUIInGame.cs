@@ -21,8 +21,8 @@ namespace DefaultNamespace
         
         private bool levelHasStarted = false;
         
-        public static TemplateUIInGame Instance { get; private set; }
-        public static bool gameHasStarted = false;
+        //public static TemplateUIInGame Instance { get; private set; }
+        public bool gameHasStarted = false;
         
 
         public void Config(UIDocument uiDocument, AudioSource audioSource)
@@ -33,7 +33,7 @@ namespace DefaultNamespace
 
             ChangeLevelStart = root.Q<VisualElement>("ChangeLevelInGame");
 
-            Instance = this;
+            //Instance = this;
 
             StartLevelUI.ChangeBoolInGame?.AddListener(GameStarted);
             uIManager.InGameUI?.AddListener(StartLevel);
@@ -44,7 +44,7 @@ namespace DefaultNamespace
             
         }
         
-        public static void SetGameStartedFlag(bool started)
+        public void SetGameStartedFlag(bool started)
         {
             gameHasStarted = started;
         }
