@@ -19,10 +19,14 @@ public class PlayerController : MonoBehaviour
     [Header("Move")] public float moveSpeed = 10f;
 
     public float groundDamping = 5f;
+    public float turnSpeed;
+    public float slopeStickForce = 5f;
+    Vector3 floorNormal;
 
     private PlayerInput playerInput;
     private Vector2 moveInput;
-    private Vector3 movedirection;
+    private Vector3 moveDirection;
+    private Vector3 aimDirection;
 
     [Header("Jump")] public float jumpForce = 17f;
     public float jumpCooldown = 0.1f;
@@ -83,11 +87,17 @@ public class PlayerController : MonoBehaviour
         //Move
         if (isGrounded)
         {
-            rb.AddForce(movedirection.normalized * (moveSpeed * 10), ForceMode.Force);
+            rb.AddForce(moveDirection * (moveSpeed * 10), ForceMode.Force);
+
+            if (aimDirection != Vector3.zero)
+            {
+                Quaternion playerRotation = Quaternion.LookRotation(aimDirection, floorNormal);
+                transform.rotation = Quaternion.Slerp(transform.rotation, playerRotation, Time.deltaTime * turnSpeed);
+            }
         }
         else if (!isGrounded)
         {
-            rb.AddForce(movedirection.normalized * (moveSpeed * 10 * airMultiplier), ForceMode.Force);
+            rb.AddForce(moveDirection * (moveSpeed * 10 * airMultiplier), ForceMode.Force);
         }
     }
 
@@ -96,6 +106,7 @@ public class PlayerController : MonoBehaviour
         //Ground Check
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundLayer);
 
+        //Is on ground?
         if (isGrounded)
         {
             rb.linearDamping = groundDamping;
@@ -115,7 +126,14 @@ public class PlayerController : MonoBehaviour
         Vector3 flatForward = Vector3.ProjectOnPlane(cameraOrientation.forward, Vector3.up).normalized;
         Vector3 flatRight = Vector3.ProjectOnPlane(cameraOrientation.right, Vector3.up).normalized;
 
-        movedirection = flatForward * moveInput.y + flatRight * moveInput.x;
+        Vector3 inputDirection = flatForward * moveInput.y + flatRight * moveInput.x;
+        inputDirection.y = 0f;
+
+        //For direction of Player Object
+        aimDirection = inputDirection.normalized;
+
+        //for movement direction of Player
+        moveDirection = Vector3.ProjectOnPlane(inputDirection, floorNormal).normalized;
     }
 
     private void ControlSpeedVelocity()
