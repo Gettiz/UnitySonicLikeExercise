@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Numerics;
 using DefaultNamespace;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -7,6 +8,9 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using Quaternion = UnityEngine.Quaternion;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController : MonoBehaviour
 {
@@ -16,12 +20,18 @@ public class PlayerController : MonoBehaviour
     [Header("Player")] private CapsuleCollider playerCollider;
     private Rigidbody rb;
 
-    [Header("Move")] public float moveSpeed = 10f;
+    [Header("Move")] public float moveSpeed = 25f;
 
     public float groundDamping = 5f;
-    public float turnSpeed;
-    public float slopeStickForce = 5f;
-    Vector3 floorNormal;
+    public float playerRotationSpeed = 15;
+    public float playerNormalRotationSpeed = 500f;
+    public float playerGravity = 50;
+
+    private bool isGrounded;
+    public float lerpOffGround = 5;
+    
+    RaycastHit nHit;
+    private Vector3 groundNormal;
 
     private PlayerInput playerInput;
     private Vector2 moveInput;
@@ -36,8 +46,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("Ground Check")] public float playerHeight = 2;
     public LayerMask groundLayer;
-
-    private bool isGrounded;
 
     [Header("Camera")] private Vector2 cameraInput;
     public CinemachineCamera CineCamera;
@@ -76,35 +84,36 @@ public class PlayerController : MonoBehaviour
     {
         GroundCheck();
 
-        PlayerMove();
-        ControlSpeedVelocity();
+        PlayerInputMove();
 
-        ControlCamera();
+        ControlInputCamera();
     }
 
     private void FixedUpdate()
     {
-        //Move
-        if (isGrounded)
-        {
-            rb.AddForce(moveDirection * (moveSpeed * 10), ForceMode.Force);
+        ControlMovement();
 
-            if (aimDirection != Vector3.zero)
-            {
-                Quaternion playerRotation = Quaternion.LookRotation(aimDirection, floorNormal);
-                transform.rotation = Quaternion.Slerp(transform.rotation, playerRotation, Time.deltaTime * turnSpeed);
-            }
-        }
-        else if (!isGrounded)
-        {
-            rb.AddForce(moveDirection * (moveSpeed * 10 * airMultiplier), ForceMode.Force);
-        }
+        ControlSpeedVelocity();
+
+        ControlRotation();
     }
+
+    
 
     private void GroundCheck()
     {
         //Ground Check
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, groundLayer);
+        if (Physics.Raycast(transform.position, -transform.up, out nHit, playerHeight * 0.5f + 0.2f, groundLayer))
+        {
+            isGrounded = true;
+            groundNormal = nHit.normal;
+        }
+        else
+        {
+            isGrounded = false;
+            groundNormal = Vector3.Lerp(groundNormal, Vector3.up, Time.deltaTime * lerpOffGround);
+
+        }
 
         //Is on ground?
         if (isGrounded)
@@ -117,65 +126,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void PlayerMove()
+    private void PlayerInputMove()
     {
         //Move
         moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
-        cameraInput = playerInput.actions["Camera"].ReadValue<Vector2>();
 
-        Vector3 flatForward = Vector3.ProjectOnPlane(cameraOrientation.forward, Vector3.up).normalized;
-        Vector3 flatRight = Vector3.ProjectOnPlane(cameraOrientation.right, Vector3.up).normalized;
+        Vector3 camForward = cameraOrientation.forward;
+        Vector3 camRight = cameraOrientation.right;
 
-        Vector3 inputDirection = flatForward * moveInput.y + flatRight * moveInput.x;
-        inputDirection.y = 0f;
-
-        //For direction of Player Object
-        aimDirection = inputDirection.normalized;
+        camForward = Vector3.ProjectOnPlane(camForward, transform.up).normalized;
+        camRight = Vector3.ProjectOnPlane(camRight, transform.up).normalized;
 
         //for movement direction of Player
-        moveDirection = Vector3.ProjectOnPlane(inputDirection, floorNormal).normalized;
+        moveDirection = (camForward * moveInput.y + camRight * moveInput.x).normalized;
     }
 
-    private void ControlSpeedVelocity()
-    {
-        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-
-        if (flatVel.magnitude > moveSpeed)
-        {
-            Vector3 limitVel = flatVel.normalized * moveSpeed;
-            rb.linearVelocity = new Vector3(limitVel.x, rb.linearVelocity.y, limitVel.z);
-        }
-    }
-
-    public void PlayerJump(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            Debug.Log($"isReadyToJump{isReadyToJump}");
-            Debug.Log($"isGrounded{isGrounded}");
-
-            if (isReadyToJump && isGrounded)
-            {
-                Debug.Log("condition key successful ");
-
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-                rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-
-                isReadyToJump = false;
-                //TODO Take into account for BunnyJump Mechanic
-                Invoke("ResetJump", jumpCooldown);
-            }
-        }
-    }
-
-    private void ResetJump()
-    {
-        isReadyToJump = true;
-    }
-
-    private void ControlCamera()
+    private void ControlInputCamera()
     {
         //Camera
+        cameraInput = playerInput.actions["Camera"].ReadValue<Vector2>();
+
         horizontalAxis.Value += cameraInput.x * sensX;
         verticalAxis.Value += -cameraInput.y * sensY;
 
@@ -183,6 +153,82 @@ public class PlayerController : MonoBehaviour
 
         OrbitalCamera.HorizontalAxis = horizontalAxis;
         OrbitalCamera.VerticalAxis = verticalAxis;
+    }
+
+    private void ControlMovement()
+    {
+        //move straight based on normals
+        Vector3 projectedMoveDirection = Vector3.ProjectOnPlane(moveDirection, groundNormal).normalized;
+
+        if (isGrounded)
+        {
+            //input death zone
+            if (moveDirection.magnitude > 0.1f)
+            {
+                rb.AddForce(projectedMoveDirection * (moveSpeed * 10), ForceMode.Force);
+            }
+        }
+
+        if (!isGrounded)
+        {
+            rb.AddForce(moveDirection * (moveSpeed * 10 * airMultiplier), ForceMode.Force);
+        }
+    }
+    
+    private void ControlSpeedVelocity()
+    {
+        Vector3 velOnPlane = Vector3.ProjectOnPlane(rb.linearVelocity, groundNormal);
+
+        if (velOnPlane.magnitude > moveSpeed)
+        {
+            Vector3 limitVel = velOnPlane.normalized * moveSpeed;
+            Vector3 perpendicularVelocity = rb.linearVelocity - velOnPlane;
+            rb.linearVelocity = limitVel + perpendicularVelocity;
+        }
+    }
+
+    private void ControlRotation()
+    {
+        
+        //Align Player towards normals
+        float angleToGroundNormal = Vector3.Angle(transform.up, groundNormal);
+        if (angleToGroundNormal > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.FromToRotation(transform.up, groundNormal) * transform.rotation;
+
+            rb.MoveRotation(Quaternion.Slerp(transform.rotation, targetRotation, Time.fixedDeltaTime * playerNormalRotationSpeed));
+        }
+
+        //Align Player towards move direction
+        if (moveDirection.magnitude > 0.1f)
+        {
+            Vector3 projectedLookDirection = Vector3.ProjectOnPlane(moveDirection, transform.up).normalized;
+            if (projectedLookDirection.sqrMagnitude > 0.01f)
+            {
+                Quaternion lookRotation = Quaternion.LookRotation(projectedLookDirection, transform.up);
+                rb.MoveRotation(Quaternion.Slerp(rb.rotation, lookRotation, Time.fixedDeltaTime * playerRotationSpeed));
+            }
+        }
+    }
+    
+    /*/////////////////////////////////// Callable movement ///////////////////////////////////*/
+    public void PlayerJump(InputAction.CallbackContext context)
+    {
+        if (context.performed && isReadyToJump && isGrounded)
+        {
+            isReadyToJump = false;
+
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+
+            //TODO Take into account for BunnyJump Mechanic
+            Invoke("ResetJump", jumpCooldown);
+        }
+    }
+
+    private void ResetJump()
+    {
+        isReadyToJump = true;
     }
 
     private void OnGUI()
