@@ -6,6 +6,7 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Quaternion = UnityEngine.Quaternion;
@@ -20,16 +21,26 @@ public class PlayerController : MonoBehaviour
     [Header("Player")] private CapsuleCollider playerCollider;
     private Rigidbody rb;
 
-    [Header("Move")] public float moveSpeed = 25f;
+    [Header("Move")] public float moveSpeed = 10f;
+    public float maxSpeed = 20;
+    public bool activeMaxSpeedCap = true;
 
     public float groundDamping = 5f;
     public float playerRotationSpeed = 15;
     public float playerNormalRotationSpeed = 500f;
     public float playerGravity = 50;
+    
+    public AnimationCurve decelerationCurve = AnimationCurve.EaseInOut(0,0,1,1);
+    public float decelerationTimer;
 
     private bool isGrounded;
     public float lerpOffGround = 5;
-    
+    public float projectedAngle;
+    public float angleDamping = 5f;
+    public float accelerationTimer = 2;
+        
+    private Vector3 LastSavedDirection;
+
     RaycastHit nHit;
     private Vector3 groundNormal;
 
@@ -98,12 +109,10 @@ public class PlayerController : MonoBehaviour
         ControlRotation();
     }
 
-    
-
     private void GroundCheck()
     {
         //Ground Check
-        if (Physics.Raycast(transform.position, -transform.up, out nHit, playerHeight * 0.5f + 0.2f, groundLayer))
+        if (Physics.Raycast(transform.position, -transform.up, out nHit, playerHeight * 0.5f + 0.2f, groundLayer, QueryTriggerInteraction.Ignore))
         {
             isGrounded = true;
             groundNormal = nHit.normal;
@@ -112,7 +121,6 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = false;
             groundNormal = Vector3.Lerp(groundNormal, Vector3.up, Time.deltaTime * lerpOffGround);
-
         }
 
         //Is on ground?
@@ -159,37 +167,60 @@ public class PlayerController : MonoBehaviour
     {
         //move straight based on normals
         Vector3 projectedMoveDirection = Vector3.ProjectOnPlane(moveDirection, groundNormal).normalized;
+        //get player angle
+        projectedAngle = Vector3.Dot(projectedMoveDirection, Vector3.up);
 
         if (isGrounded)
         {
-            //input death zone
+            //accelerate // decelerate
             if (moveDirection.magnitude > 0.1f)
             {
-                rb.AddForce(projectedMoveDirection * (moveSpeed * 10), ForceMode.Force);
+                decelerationTimer += Time.deltaTime;
+                LastSavedDirection = projectedMoveDirection;
+                moveSpeed = Mathf.Lerp(moveSpeed, maxSpeed, accelerationTimer * Time.deltaTime);
             }
+            else
+            {
+                decelerationTimer -= Time.deltaTime;
+                decelerationTimer = Mathf.Clamp(decelerationTimer, 0f, accelerationTimer / 2);
+                float curveTime = decelerationTimer / accelerationTimer;
+                float curve = decelerationCurve.Evaluate(curveTime);
+                
+                moveSpeed = Mathf.Lerp(0, moveSpeed, curve);
+            }
+
+            Vector3 desiredMoveDirection = moveDirection.magnitude > 0.1f ? projectedMoveDirection : LastSavedDirection;
+            
+            Vector3 desiredSpeed = desiredMoveDirection * ((moveSpeed - projectedAngle * angleDamping) * 10);
+            
+            rb.AddForce(desiredSpeed, ForceMode.Force);
+            //Debug.Log(desiredSpeed);
         }
 
         if (!isGrounded)
         {
             rb.AddForce(moveDirection * (moveSpeed * 10 * airMultiplier), ForceMode.Force);
+            Gravity();
         }
     }
-    
+
     private void ControlSpeedVelocity()
     {
-        Vector3 velOnPlane = Vector3.ProjectOnPlane(rb.linearVelocity, groundNormal);
-
-        if (velOnPlane.magnitude > moveSpeed)
+        if (activeMaxSpeedCap)
         {
-            Vector3 limitVel = velOnPlane.normalized * moveSpeed;
-            Vector3 perpendicularVelocity = rb.linearVelocity - velOnPlane;
-            rb.linearVelocity = limitVel + perpendicularVelocity;
+            Vector3 velOnPlane = Vector3.ProjectOnPlane(rb.linearVelocity, groundNormal);
+
+            if (velOnPlane.magnitude > moveSpeed)
+            {
+                Vector3 limitVel = velOnPlane.normalized * moveSpeed;
+                Vector3 perpendicularVelocity = rb.linearVelocity - velOnPlane;
+                rb.linearVelocity = limitVel + perpendicularVelocity;
+            }
         }
     }
 
     private void ControlRotation()
     {
-        
         //Align Player towards normals
         float angleToGroundNormal = Vector3.Angle(transform.up, groundNormal);
         if (angleToGroundNormal > 0.1f)
@@ -210,16 +241,22 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+
     /*/////////////////////////////////// Callable movement ///////////////////////////////////*/
+
+    private void Gravity()
+    {
+        rb.linearVelocity -= Vector3.up * playerGravity * Time.deltaTime;
+    }
+
     public void PlayerJump(InputAction.CallbackContext context)
     {
         if (context.performed && isReadyToJump && isGrounded)
         {
             isReadyToJump = false;
 
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+            //rb.linearVelocity = Vector3.Project(rb.linearVelocity, rb.transform.up);
 
             //TODO Take into account for BunnyJump Mechanic
             Invoke("ResetJump", jumpCooldown);
