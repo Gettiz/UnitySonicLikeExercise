@@ -3,6 +3,7 @@ using System.Collections;
 using System.Numerics;
 using DefaultNamespace;
 using Unity.Cinemachine;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -29,16 +30,21 @@ public class PlayerController : MonoBehaviour
     public float playerRotationSpeed = 15;
     public float playerNormalRotationSpeed = 500f;
     public float playerGravity = 50;
-    
-    public AnimationCurve decelerationCurve = AnimationCurve.EaseInOut(0,0,1,1);
+
+    public AnimationCurve decelerationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
     public float decelerationTimer;
 
     private bool isGrounded;
+    private bool hasGroundedStarted = true;
+    public float hasGroundedStartedTimer;
     public float lerpOffGround = 5;
     public float projectedAngle;
     public float angleDamping = 5f;
     public float accelerationTimer = 2;
-        
+
+    public float OverSpeedBreak = 5;
+    public float momentumFriction = 5;
+
     private Vector3 LastSavedDirection;
 
     RaycastHit nHit;
@@ -49,7 +55,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveDirection;
     private Vector3 aimDirection;
 
-    [Header("Jump")] public float jumpForce = 17f;
+    [Header("Jump")] public float jumpForce = 20f;
     public float jumpCooldown = 0.1f;
     public float airMultiplier = 0.4f;
 
@@ -123,14 +129,37 @@ public class PlayerController : MonoBehaviour
             groundNormal = Vector3.Lerp(groundNormal, Vector3.up, Time.deltaTime * lerpOffGround);
         }
 
+
         //Is on ground?
         if (isGrounded)
         {
-            rb.linearDamping = groundDamping;
+            //rb.linearDamping = groundDamping;
+            if (hasGroundedStarted)
+            {
+                StartCoroutine(lerpDamping());
+                hasGroundedStarted = false;
+            }
+
+            Debug.Log(rb.linearDamping);
         }
         else
         {
+            StopCoroutine(lerpDamping());
+            hasGroundedStarted = true;
             rb.linearDamping = 0;
+        }
+    }
+
+    IEnumerator lerpDamping()
+    {
+        float elapsedTime = 0;
+        while (elapsedTime < hasGroundedStartedTimer && isGrounded)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / hasGroundedStartedTimer;
+
+            rb.linearDamping = Mathf.Lerp(rb.linearDamping, groundDamping, t);
+            yield return null;
         }
     }
 
@@ -185,16 +214,16 @@ public class PlayerController : MonoBehaviour
                 decelerationTimer = Mathf.Clamp(decelerationTimer, 0f, accelerationTimer / 2);
                 float curveTime = decelerationTimer / accelerationTimer;
                 float curve = decelerationCurve.Evaluate(curveTime);
-                
+
                 moveSpeed = Mathf.Lerp(0, moveSpeed, curve);
             }
 
+            // Vector Direction
             Vector3 desiredMoveDirection = moveDirection.magnitude > 0.1f ? projectedMoveDirection : LastSavedDirection;
-            
+
+            // Set final Speed
             Vector3 desiredSpeed = desiredMoveDirection * ((moveSpeed - projectedAngle * angleDamping) * 10);
-            
             rb.AddForce(desiredSpeed, ForceMode.Force);
-            //Debug.Log(desiredSpeed);
         }
 
         if (!isGrounded)
@@ -208,13 +237,21 @@ public class PlayerController : MonoBehaviour
     {
         if (activeMaxSpeedCap)
         {
-            Vector3 velOnPlane = Vector3.ProjectOnPlane(rb.linearVelocity, groundNormal);
-
-            if (velOnPlane.magnitude > moveSpeed)
+            Vector3 currentMomentum = rb.linearVelocity;
+            if (currentMomentum.magnitude > 5f)
             {
-                Vector3 limitVel = velOnPlane.normalized * moveSpeed;
-                Vector3 perpendicularVelocity = rb.linearVelocity - velOnPlane;
-                rb.linearVelocity = limitVel + perpendicularVelocity;
+                float frictionMagnitude;
+                if (currentMomentum.magnitude > maxSpeed * 2)
+                {
+                    frictionMagnitude = OverSpeedBreak;
+                }
+                else
+                {
+                    frictionMagnitude = -momentumFriction;
+                }
+
+                Vector3 frictionForce = -currentMomentum.normalized * frictionMagnitude;
+                rb.AddForce(frictionForce, ForceMode.Force);
             }
         }
     }
