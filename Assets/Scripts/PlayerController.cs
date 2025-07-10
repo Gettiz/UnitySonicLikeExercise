@@ -38,7 +38,8 @@ public class PlayerController : MonoBehaviour
     private bool hasGroundedStarted = true;
     public float hasGroundedStartedTimer;
     public float lerpOffGround = 5;
-    public float projectedAngle;
+    private Vector3 projectedMoveDirection;
+    private float projectedAngle;
     public float angleDamping = 5f;
     public float accelerationTimer = 2;
 
@@ -54,6 +55,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput;
     private Vector3 moveDirection;
     private Vector3 aimDirection;
+    private Vector3 finalDesiredSpeed;
 
     [Header("Jump")] public float jumpForce = 20f;
     public float jumpCooldown = 0.1f;
@@ -64,9 +66,12 @@ public class PlayerController : MonoBehaviour
     [Header("Ground Check")] public float playerHeight = 2;
     public LayerMask groundLayer;
 
-    [Header("Camera")] private Vector2 cameraInput;
+    [Header("Camera")] public Vector2 cameraInput;
     public CinemachineCamera CineCamera;
     public CinemachineOrbitalFollow OrbitalCamera;
+    public float CamFollowSpeed = 5f;
+    public float CamWaitToFollowSpeed = 5f;
+    private float lastInputCamInTime;
     private InputAxis horizontalAxis;
     private InputAxis verticalAxis;
 
@@ -95,6 +100,7 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
 
         playerHeight = playerCollider.height;
+        lastInputCamInTime = Time.time;
     }
 
     private void Update()
@@ -139,8 +145,6 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(lerpDamping());
                 hasGroundedStarted = false;
             }
-
-            Debug.Log(rb.linearDamping);
         }
         else
         {
@@ -183,10 +187,26 @@ public class PlayerController : MonoBehaviour
         //Camera
         cameraInput = playerInput.actions["Camera"].ReadValue<Vector2>();
 
-        horizontalAxis.Value += cameraInput.x * sensX;
-        verticalAxis.Value += -cameraInput.y * sensY;
+        if (math.abs(cameraInput.x) > 0.01f || math.abs(cameraInput.y) > 0.01f)
+        {
+            horizontalAxis.Value += cameraInput.x * sensX;
+            verticalAxis.Value += -cameraInput.y * sensY;
+            verticalAxis.Value = Mathf.Clamp(verticalAxis.Value, -75f, 75f);
 
-        verticalAxis.Value = Mathf.Clamp(verticalAxis.Value, -75f, 75f);
+            lastInputCamInTime = Time.time;
+        }
+        else
+        {
+            if (Time.time >= lastInputCamInTime + CamWaitToFollowSpeed)
+            {
+                float CurrentAngleX = Mathf.Atan2(finalDesiredSpeed.x, finalDesiredSpeed.z) * Mathf.Rad2Deg;
+                horizontalAxis.Value = Mathf.LerpAngle(horizontalAxis.Value, CurrentAngleX, Time.deltaTime * CamFollowSpeed);
+                
+                /*
+                 * Añadir rotacion de camara basado en "y" del jugador.
+                 */
+            }
+        }
 
         OrbitalCamera.HorizontalAxis = horizontalAxis;
         OrbitalCamera.VerticalAxis = verticalAxis;
@@ -195,7 +215,7 @@ public class PlayerController : MonoBehaviour
     private void ControlMovement()
     {
         //move straight based on normals
-        Vector3 projectedMoveDirection = Vector3.ProjectOnPlane(moveDirection, groundNormal).normalized;
+        projectedMoveDirection = Vector3.ProjectOnPlane(moveDirection, groundNormal).normalized;
         //get player angle
         projectedAngle = Vector3.Dot(projectedMoveDirection, Vector3.up);
 
@@ -222,8 +242,8 @@ public class PlayerController : MonoBehaviour
             Vector3 desiredMoveDirection = moveDirection.magnitude > 0.1f ? projectedMoveDirection : LastSavedDirection;
 
             // Set final Speed
-            Vector3 desiredSpeed = desiredMoveDirection * ((moveSpeed - projectedAngle * angleDamping) * 10);
-            rb.AddForce(desiredSpeed, ForceMode.Force);
+            finalDesiredSpeed = desiredMoveDirection * ((moveSpeed - projectedAngle * angleDamping) * 10);
+            rb.AddForce(finalDesiredSpeed, ForceMode.Force);
         }
 
         if (!isGrounded)
