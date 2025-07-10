@@ -56,6 +56,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveDirection;
     private Vector3 aimDirection;
     private Vector3 finalDesiredSpeed;
+    private Vector3 projectedLookDirection;
 
     [Header("Jump")] public float jumpForce = 20f;
     public float jumpCooldown = 0.1f;
@@ -191,6 +192,7 @@ public class PlayerController : MonoBehaviour
         {
             horizontalAxis.Value += cameraInput.x * sensX;
             verticalAxis.Value += -cameraInput.y * sensY;
+
             verticalAxis.Value = Mathf.Clamp(verticalAxis.Value, -75f, 75f);
 
             lastInputCamInTime = Time.time;
@@ -199,8 +201,11 @@ public class PlayerController : MonoBehaviour
         {
             if (Time.time >= lastInputCamInTime + CamWaitToFollowSpeed)
             {
-                float CurrentAngleX = Mathf.Atan2(finalDesiredSpeed.x, finalDesiredSpeed.z) * Mathf.Rad2Deg;
+                float CurrentAngleX = Mathf.Atan2(projectedLookDirection.x, projectedLookDirection.z) * Mathf.Rad2Deg;
                 horizontalAxis.Value = Mathf.LerpAngle(horizontalAxis.Value, CurrentAngleX, Time.deltaTime * CamFollowSpeed);
+
+                //float CurrentAngleY = Mathf.LerpAngle(verticalAxis.Value, projectedMoveDirection.y, Time.deltaTime * CamFollowSpeed*2);
+                //verticalAxis.Value = CurrentAngleY;
                 
                 /*
                  * Añadir rotacion de camara basado en "y" del jugador.
@@ -290,7 +295,7 @@ public class PlayerController : MonoBehaviour
         //Align Player towards move direction
         if (moveDirection.magnitude > 0.1f)
         {
-            Vector3 projectedLookDirection = Vector3.ProjectOnPlane(moveDirection, transform.up).normalized;
+            projectedLookDirection = Vector3.ProjectOnPlane(moveDirection, transform.up).normalized;
             if (projectedLookDirection.sqrMagnitude > 0.01f)
             {
                 Quaternion lookRotation = Quaternion.LookRotation(projectedLookDirection, transform.up);
