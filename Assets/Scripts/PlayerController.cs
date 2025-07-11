@@ -4,6 +4,7 @@ using System.Numerics;
 using DefaultNamespace;
 using Unity.Cinemachine;
 using Unity.Mathematics;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -73,26 +74,21 @@ public class PlayerController : MonoBehaviour
     public Vector3 inputToCameraPosition;
     public Quaternion inputToCameraRotation;
 
-    public float cameraXValue;
-    public float cameraYValue;
-    public float cameraZValue;
-
-    private float saveCameraLastInputTime;
-
-    public float cameraWaitAutoFollow = 5f;
-
     public float cameraLerpLagFollowRotation = 5f;
+    public float cameraLerpLagFollowRotationMultiplier = 5f;
+    public float cameraNormalToRotation = 0.1f;
     private Vector3 velocityFollowPosition;
-    public float cameraLerpLagFollowPosition = 5f;
+    public float cameraLerpLagFollowPosition = 0.15f;
 
     public float cameraPositionDistance = 6f;
-    public float cameraPositionHeight= 1.5f;
+    public float cameraPositionHeight= 0.5f;
 
     public GameObject cameraMain;
     public GameObject cameraTargetPosition;
 
-    float xRotationValue;
-    float yRotationValue;
+    private float xRotationValue;
+    private float yRotationValue;
+    private float zRotationValue;
     
     public float sensX;
     public float sensY;
@@ -120,7 +116,6 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
 
         playerHeight = playerCollider.height;
-        saveCameraLastInputTime = Time.time;
     }
 
     private void Update()
@@ -207,29 +202,46 @@ public class PlayerController : MonoBehaviour
         //Camera
         cameraInput = playerInput.actions["Camera"].ReadValue<Vector2>();
 
-        if (math.abs(cameraInput.x) > 0.01f || math.abs(cameraInput.y) > 0.01f)
+        //Rotate Camera based on input 
+        if (math.abs(cameraInput.x) > 0.01f && rb.linearVelocity.magnitude < 25 || math.abs(cameraInput.y) > 0.01f && rb.linearVelocity.magnitude < 25)
         {
             xRotationValue += cameraInput.x * sensX;
             yRotationValue += -cameraInput.y * sensY;
             yRotationValue = Mathf.Clamp(yRotationValue, -75f, 75f);
             
-            inputToCameraRotation = Quaternion.Euler(yRotationValue, xRotationValue, 0);
-                
-            saveCameraLastInputTime = Time.time;
+            inputToCameraRotation = Quaternion.Euler(yRotationValue, xRotationValue, zRotationValue);
+        }
+        //Slowly Rotate Camera to player position if input is pressed
+        if (math.abs(moveDirection.magnitude) > 0.01f && rb.linearVelocity.magnitude < 25)
+        {
+            Quaternion lookrotationcamera = Quaternion.LookRotation(moveDirection);
+            xRotationValue = cameraMain.transform.eulerAngles.y;
+            yRotationValue = cameraMain.transform.eulerAngles.x;
+            
+            inputToCameraRotation = Quaternion.Lerp(inputToCameraRotation, lookrotationcamera, cameraLerpLagFollowRotation * Time.deltaTime);
+            
+        }
+        
+        if (rb.linearVelocity.magnitude >= 25)
+        {
+            Quaternion lookrotationcamera = Quaternion.LookRotation(moveDirection);
+            xRotationValue = cameraMain.transform.eulerAngles.y;
+            yRotationValue = cameraMain.transform.eulerAngles.x;
+            
+            inputToCameraRotation = Quaternion.Lerp(inputToCameraRotation, lookrotationcamera, cameraLerpLagFollowRotation * Time.deltaTime * cameraLerpLagFollowRotationMultiplier);
+            
+            Vector3 lookAtNormal = Vector3.Lerp(cameraMain.transform.up,groundNormal,cameraNormalToRotation);
+            
+            cameraMain.transform.LookAt(cameraTargetPosition.transform, lookAtNormal);
         }
         else
         {
-            if (Time.time >= saveCameraLastInputTime + cameraWaitAutoFollow)
-            {
-                /*
-                 * add block camera rotation based on normal if enough speed is reached
-                 */
-            }
+            cameraMain.transform.LookAt(cameraTargetPosition.transform);
         }
-        ////How Far my camera will be, "Lag" and LookAt////
+        
+        ////How Far my camera will be and "Lag"////
         Vector3 desiredPosition = cameraTargetPosition.transform.position - (cameraTargetPosition.transform.forward * cameraPositionDistance) + (Vector3.up * cameraPositionHeight);
         cameraMain.transform.position = Vector3.SmoothDamp(cameraMain.transform.position, desiredPosition, ref velocityFollowPosition,cameraLerpLagFollowPosition);
-        cameraMain.transform.LookAt(cameraTargetPosition.transform);
         
         ////Rotation
         cameraTargetPosition.transform.rotation = inputToCameraRotation;
