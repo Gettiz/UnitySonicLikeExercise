@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     public float maxSpeed = 20;
     public bool activeMaxSpeedCap = true;
 
+    public Vector3 vectorCameraToLookAt;
     public float groundDamping = 5f;
     public float playerRotationSpeed = 15;
     public float playerNormalRotationSpeed = 500f;
@@ -68,18 +69,36 @@ public class PlayerController : MonoBehaviour
     public LayerMask groundLayer;
 
     [Header("Camera")] public Vector2 cameraInput;
-    public CinemachineCamera CineCamera;
-    public CinemachineOrbitalFollow OrbitalCamera;
-    public float CamFollowSpeed = 5f;
-    public float CamWaitToFollowSpeed = 5f;
-    private float lastInputCamInTime;
-    private InputAxis horizontalAxis;
-    private InputAxis verticalAxis;
 
+    public Vector3 inputToCameraPosition;
+    public Quaternion inputToCameraRotation;
+
+    public float cameraXValue;
+    public float cameraYValue;
+    public float cameraZValue;
+
+    private float saveCameraLastInputTime;
+
+    public float cameraWaitAutoFollow = 5f;
+
+    public float cameraLerpLagFollowRotation = 5f;
+    private Vector3 velocityFollowPosition;
+    public float cameraLerpLagFollowPosition = 5f;
+
+    public float cameraPositionDistance = 6f;
+    public float cameraPositionHeight= 1.5f;
+
+    public GameObject cameraMain;
+    public GameObject cameraTargetPosition;
+
+    float xRotationValue;
+    float yRotationValue;
+    
     public float sensX;
     public float sensY;
+    
 
-    [Header("Object Atlas")] public Transform cameraOrientation;
+    //[Header("Object Atlas")] 
 
     private void Awake()
     {
@@ -101,7 +120,7 @@ public class PlayerController : MonoBehaviour
         Cursor.visible = false;
 
         playerHeight = playerCollider.height;
-        lastInputCamInTime = Time.time;
+        saveCameraLastInputTime = Time.time;
     }
 
     private void Update()
@@ -173,8 +192,8 @@ public class PlayerController : MonoBehaviour
         //Move
         moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
 
-        Vector3 camForward = cameraOrientation.forward;
-        Vector3 camRight = cameraOrientation.right;
+        Vector3 camForward = cameraMain.transform.forward;
+        Vector3 camRight = cameraMain.transform.right;
 
         camForward = Vector3.ProjectOnPlane(camForward, transform.up).normalized;
         camRight = Vector3.ProjectOnPlane(camRight, transform.up).normalized;
@@ -190,31 +209,30 @@ public class PlayerController : MonoBehaviour
 
         if (math.abs(cameraInput.x) > 0.01f || math.abs(cameraInput.y) > 0.01f)
         {
-            horizontalAxis.Value += cameraInput.x * sensX;
-            verticalAxis.Value += -cameraInput.y * sensY;
-
-            verticalAxis.Value = Mathf.Clamp(verticalAxis.Value, -75f, 75f);
-
-            lastInputCamInTime = Time.time;
+            xRotationValue += cameraInput.x * sensX;
+            yRotationValue += -cameraInput.y * sensY;
+            yRotationValue = Mathf.Clamp(yRotationValue, -75f, 75f);
+            
+            inputToCameraRotation = Quaternion.Euler(yRotationValue, xRotationValue, 0);
+                
+            saveCameraLastInputTime = Time.time;
         }
         else
         {
-            if (Time.time >= lastInputCamInTime + CamWaitToFollowSpeed)
+            if (Time.time >= saveCameraLastInputTime + cameraWaitAutoFollow)
             {
-                float CurrentAngleX = Mathf.Atan2(projectedLookDirection.x, projectedLookDirection.z) * Mathf.Rad2Deg;
-                horizontalAxis.Value = Mathf.LerpAngle(horizontalAxis.Value, CurrentAngleX, Time.deltaTime * CamFollowSpeed);
-
-                //float CurrentAngleY = Mathf.LerpAngle(verticalAxis.Value, projectedMoveDirection.y, Time.deltaTime * CamFollowSpeed*2);
-                //verticalAxis.Value = CurrentAngleY;
-                
                 /*
-                 * Añadir rotacion de camara basado en "y" del jugador.
+                 * add block camera rotation based on normal if enough speed is reached
                  */
             }
         }
-
-        OrbitalCamera.HorizontalAxis = horizontalAxis;
-        OrbitalCamera.VerticalAxis = verticalAxis;
+        ////How Far my camera will be, "Lag" and LookAt////
+        Vector3 desiredPosition = cameraTargetPosition.transform.position - (cameraTargetPosition.transform.forward * cameraPositionDistance) + (Vector3.up * cameraPositionHeight);
+        cameraMain.transform.position = Vector3.SmoothDamp(cameraMain.transform.position, desiredPosition, ref velocityFollowPosition,cameraLerpLagFollowPosition);
+        cameraMain.transform.LookAt(cameraTargetPosition.transform);
+        
+        ////Rotation
+        cameraTargetPosition.transform.rotation = inputToCameraRotation;
     }
 
     private void ControlMovement()
