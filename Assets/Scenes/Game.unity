@@ -8548,16 +8548,17 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  decelerationTimer: 0
+  moveTimer: 0
   hasGroundedStartedTimer: 1
   lerpOffGround: 5
   angleDamping: 5
-  accelerationTimer: 2
+  maxSpeedTimer: 0.5
+  deaccelerationDuration: 1
   OverSpeedBreak: 5
   momentumFriction: 5
   jumpForce: 20
   jumpCooldown: 0.1
-  airMultiplier: 0.4
+  airMultiplier: 30
   playerHeight: 2
   groundLayer:
     serializedVersion: 2

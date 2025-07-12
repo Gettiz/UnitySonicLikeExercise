@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     public float playerGravity = 50;
 
     public AnimationCurve decelerationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-    public float decelerationTimer;
+    public float moveTimer;
 
     private bool isGrounded;
     private bool hasGroundedStarted = true;
@@ -43,7 +43,11 @@ public class PlayerController : MonoBehaviour
     private Vector3 projectedMoveDirection;
     private float projectedAngle;
     public float angleDamping = 5f;
-    public float accelerationTimer = 2;
+    
+    private bool wasMovingLastFrame;
+    public float maxSpeedTimer;
+    public float deaccelerationDuration;
+    private float moveSpeedToStop;
 
     public float OverSpeedBreak = 5;
     public float momentumFriction = 5;
@@ -79,6 +83,7 @@ public class PlayerController : MonoBehaviour
     public float cameraNormalToRotation = 0.1f;
     private Vector3 velocityFollowPosition;
     public float cameraLerpLagFollowPosition = 0.15f;
+    private float groundNormalAngle;
 
     public float cameraPositionDistance = 6f;
     public float cameraPositionHeight= 0.5f;
@@ -150,7 +155,6 @@ public class PlayerController : MonoBehaviour
             groundNormal = Vector3.Lerp(groundNormal, Vector3.up, Time.deltaTime * lerpOffGround);
         }
 
-
         //Is on ground?
         if (isGrounded)
         {
@@ -165,7 +169,13 @@ public class PlayerController : MonoBehaviour
         {
             StopCoroutine(lerpDamping());
             hasGroundedStarted = true;
-            rb.linearDamping = 0;
+            
+        }
+
+        groundNormalAngle = Vector3.Angle(groundNormal, Vector3.up);
+        if (groundNormalAngle > 45)
+        {
+            rb.linearVelocity -= Vector3.up * (playerGravity / 2) * Time.deltaTime;
         }
     }
 
@@ -203,7 +213,7 @@ public class PlayerController : MonoBehaviour
         cameraInput = playerInput.actions["Camera"].ReadValue<Vector2>();
 
         //Rotate Camera based on input 
-        if (math.abs(cameraInput.x) > 0.01f && rb.linearVelocity.magnitude < 25 || math.abs(cameraInput.y) > 0.01f && rb.linearVelocity.magnitude < 25)
+        if (math.abs(cameraInput.x) > 0.01f && rb.linearVelocity.magnitude < 20 || math.abs(cameraInput.y) > 0.01f && rb.linearVelocity.magnitude < 20)
         {
             xRotationValue += cameraInput.x * sensX;
             yRotationValue += -cameraInput.y * sensY;
@@ -212,19 +222,17 @@ public class PlayerController : MonoBehaviour
             inputToCameraRotation = Quaternion.Euler(yRotationValue, xRotationValue, zRotationValue);
         }
         //Slowly Rotate Camera to player position if input is pressed
-        if (math.abs(moveDirection.magnitude) > 0.01f && rb.linearVelocity.magnitude < 25)
+        if (math.abs(moveDirection.magnitude) > 0.01f && rb.linearVelocity.magnitude < 20)
         {
-            Quaternion lookrotationcamera = Quaternion.LookRotation(moveDirection);
-            xRotationValue = cameraMain.transform.eulerAngles.y;
-            yRotationValue = cameraMain.transform.eulerAngles.x;
+            Quaternion lookrotationcamera = Quaternion.LookRotation(LastSavedDirection);
             
             inputToCameraRotation = Quaternion.Lerp(inputToCameraRotation, lookrotationcamera, cameraLerpLagFollowRotation * Time.deltaTime);
             
         }
         
-        if (rb.linearVelocity.magnitude >= 25)
+        if (rb.linearVelocity.magnitude >= 20)
         {
-            Quaternion lookrotationcamera = Quaternion.LookRotation(moveDirection);
+            Quaternion lookrotationcamera = Quaternion.LookRotation(LastSavedDirection);
             xRotationValue = cameraMain.transform.eulerAngles.y;
             yRotationValue = cameraMain.transform.eulerAngles.x;
             
@@ -253,24 +261,34 @@ public class PlayerController : MonoBehaviour
         projectedMoveDirection = Vector3.ProjectOnPlane(moveDirection, groundNormal).normalized;
         //get player angle
         projectedAngle = Vector3.Dot(projectedMoveDirection, Vector3.up);
-
+        
         if (isGrounded)
         {
             //accelerate // decelerate
             if (moveDirection.magnitude > 0.1f)
             {
-                decelerationTimer += Time.deltaTime;
+                wasMovingLastFrame = true;
+                
                 LastSavedDirection = projectedMoveDirection;
-                moveSpeed = Mathf.Lerp(moveSpeed, maxSpeed, accelerationTimer * Time.deltaTime);
+                
+                moveSpeed = Mathf.Lerp(moveSpeed, maxSpeed, maxSpeedTimer * Time.deltaTime);
             }
             else
             {
-                decelerationTimer -= Time.deltaTime;
-                decelerationTimer = Mathf.Clamp(decelerationTimer, 0f, accelerationTimer / 2);
-                float curveTime = decelerationTimer / accelerationTimer;
-                float curve = decelerationCurve.Evaluate(curveTime);
+                if (wasMovingLastFrame)
+                {
+                    wasMovingLastFrame = false;
+                    moveSpeedToStop = moveSpeed; 
+                    moveTimer = 0f;             
+                }
+                if (moveSpeedToStop > 0)
+                {
+                    moveTimer += Time.deltaTime;
+                    float decelerationProgress = moveTimer / deaccelerationDuration;
+                    float curveValue = decelerationCurve.Evaluate(decelerationProgress);
 
-                moveSpeed = Mathf.Lerp(0, moveSpeed, curve);
+                    moveSpeed = Mathf.Lerp(moveSpeedToStop, 0f, curveValue);
+                }
             }
 
             // Vector Direction
@@ -280,10 +298,18 @@ public class PlayerController : MonoBehaviour
             finalDesiredSpeed = desiredMoveDirection * ((moveSpeed - projectedAngle * angleDamping) * 10);
             rb.AddForce(finalDesiredSpeed, ForceMode.Force);
         }
-
+        
+        // Can run along walls?
+        if (rb.linearVelocity.magnitude < 25 && groundNormalAngle > 55)
+        {
+            transform.up = Vector3.up;
+            groundNormal = Vector3.up;
+        }
+        
         if (!isGrounded)
         {
-            rb.AddForce(moveDirection * (moveSpeed * 10 * airMultiplier), ForceMode.Force);
+            rb.AddForce(moveDirection * airMultiplier, ForceMode.Force);
+            rb.linearDamping = 0.5f;
             Gravity();
         }
     }
