@@ -1,16 +1,8 @@
-using System;
 using System.Collections;
-using System.Numerics;
-using DefaultNamespace;
-using Unity.Cinemachine;
 using Unity.Mathematics;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.PlayerLoop;
-using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -29,28 +21,36 @@ public class PlayerController : MonoBehaviour
 
     public Vector3 vectorCameraToLookAt;
     public float groundDamping = 5f;
-    public float playerRotationSpeed = 15;
+    public float playerRotationSpeed = 15f;
     public float playerNormalRotationSpeed = 500f;
-    public float playerGravity = 50;
+    public float playerGravity = 50f;
+
+    public float playerGravityBounce = 100f;
+    public float offsetBounce = 1.2f;
+    private bool canGroundbeDeactivated = false;
+    private bool isBouncing = false;
 
     public AnimationCurve decelerationCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
     public float moveTimer;
 
     private bool isGrounded;
     private bool hasGroundedStarted = true;
-    public float hasGroundedStartedTimer;
-    public float lerpOffGround = 5;
+    public float hasGroundedStartedTimer = 1f;
+    public float lerpOffGround = 5f;
     private Vector3 projectedMoveDirection;
     private float projectedAngle;
     public float angleDamping = 5f;
-    
+
     private bool wasMovingLastFrame;
-    public float maxSpeedTimer;
-    public float deaccelerationDuration;
+    public float maxSpeedTimer = 0.5f;
+    public float deaccelerationDuration = 1f;
     private float moveSpeedToStop;
 
-    public float OverSpeedBreak = 5;
-    public float momentumFriction = 5;
+    public float OverSpeedBreak = 5f;
+    public float momentumFriction = 5f;
+
+    private bool hasTurboStarted = false;
+    public float turboMultiplier = 100f;
 
     private Vector3 LastSavedDirection;
 
@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
 
     private bool isReadyToJump = true;
 
-    [Header("Ground Check")] public float playerHeight = 2;
+    [Header("Ground Check")] public float playerHeight = 2f;
     public LayerMask groundLayer;
 
     [Header("Camera")] public Vector2 cameraInput;
@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
     private float groundNormalAngle;
 
     public float cameraPositionDistance = 6f;
-    public float cameraPositionHeight= 0.5f;
+    public float cameraPositionHeight = 0.5f;
 
     public GameObject cameraMain;
     public GameObject cameraTargetPosition;
@@ -94,10 +94,10 @@ public class PlayerController : MonoBehaviour
     private float xRotationValue;
     private float yRotationValue;
     private float zRotationValue;
-    
+
     public float sensX;
     public float sensY;
-    
+
 
     //[Header("Object Atlas")] 
 
@@ -146,12 +146,20 @@ public class PlayerController : MonoBehaviour
         //Ground Check
         if (Physics.Raycast(transform.position, -transform.up, out nHit, playerHeight * 0.5f + 0.2f, groundLayer, QueryTriggerInteraction.Ignore))
         {
-            isGrounded = true;
+            if (!canGroundbeDeactivated)
+            {
+                isGrounded = true;
+            }
+            
             groundNormal = nHit.normal;
         }
         else
         {
-            isGrounded = false;
+            if (!canGroundbeDeactivated)
+            {
+                isGrounded = false;
+            }
+
             groundNormal = Vector3.Lerp(groundNormal, Vector3.up, Time.deltaTime * lerpOffGround);
         }
 
@@ -169,7 +177,6 @@ public class PlayerController : MonoBehaviour
         {
             StopCoroutine(lerpDamping());
             hasGroundedStarted = true;
-            
         }
 
         groundNormalAngle = Vector3.Angle(groundNormal, Vector3.up);
@@ -218,39 +225,42 @@ public class PlayerController : MonoBehaviour
             xRotationValue += cameraInput.x * sensX;
             yRotationValue += -cameraInput.y * sensY;
             yRotationValue = Mathf.Clamp(yRotationValue, -75f, 75f);
-            
+
             inputToCameraRotation = Quaternion.Euler(yRotationValue, xRotationValue, zRotationValue);
         }
+
         //Slowly Rotate Camera to player position if input is pressed
         if (math.abs(moveDirection.magnitude) > 0.01f && rb.linearVelocity.magnitude < 20)
         {
             Quaternion lookrotationcamera = Quaternion.LookRotation(LastSavedDirection);
-            
+
             inputToCameraRotation = Quaternion.Lerp(inputToCameraRotation, lookrotationcamera, cameraLerpLagFollowRotation * Time.deltaTime);
-            
         }
-        
+
         if (rb.linearVelocity.magnitude >= 20)
         {
             Quaternion lookrotationcamera = Quaternion.LookRotation(LastSavedDirection);
             xRotationValue = cameraMain.transform.eulerAngles.y;
             yRotationValue = cameraMain.transform.eulerAngles.x;
-            
-            inputToCameraRotation = Quaternion.Lerp(inputToCameraRotation, lookrotationcamera, cameraLerpLagFollowRotation * Time.deltaTime * cameraLerpLagFollowRotationMultiplier);
-            
-            Vector3 lookAtNormal = Vector3.Lerp(cameraMain.transform.up,groundNormal,cameraNormalToRotation);
-            
+
+            inputToCameraRotation = Quaternion.Lerp(inputToCameraRotation, lookrotationcamera,
+                cameraLerpLagFollowRotation * Time.deltaTime * cameraLerpLagFollowRotationMultiplier);
+
+            Vector3 lookAtNormal = Vector3.Lerp(cameraMain.transform.up, groundNormal, cameraNormalToRotation);
+
             cameraMain.transform.LookAt(cameraTargetPosition.transform, lookAtNormal);
         }
         else
         {
             cameraMain.transform.LookAt(cameraTargetPosition.transform);
         }
-        
+
         ////How Far my camera will be and "Lag"////
-        Vector3 desiredPosition = cameraTargetPosition.transform.position - (cameraTargetPosition.transform.forward * cameraPositionDistance) + (Vector3.up * cameraPositionHeight);
-        cameraMain.transform.position = Vector3.SmoothDamp(cameraMain.transform.position, desiredPosition, ref velocityFollowPosition,cameraLerpLagFollowPosition);
-        
+        Vector3 desiredPosition = cameraTargetPosition.transform.position - (cameraTargetPosition.transform.forward * cameraPositionDistance) +
+                                  (Vector3.up * cameraPositionHeight);
+        cameraMain.transform.position =
+            Vector3.SmoothDamp(cameraMain.transform.position, desiredPosition, ref velocityFollowPosition, cameraLerpLagFollowPosition);
+
         ////Rotation
         cameraTargetPosition.transform.rotation = inputToCameraRotation;
     }
@@ -261,16 +271,16 @@ public class PlayerController : MonoBehaviour
         projectedMoveDirection = Vector3.ProjectOnPlane(moveDirection, groundNormal).normalized;
         //get player angle
         projectedAngle = Vector3.Dot(projectedMoveDirection, Vector3.up);
-        
+
         if (isGrounded)
         {
             //accelerate // decelerate
             if (moveDirection.magnitude > 0.1f)
             {
                 wasMovingLastFrame = true;
-                
+
                 LastSavedDirection = projectedMoveDirection;
-                
+
                 moveSpeed = Mathf.Lerp(moveSpeed, maxSpeed, maxSpeedTimer * Time.deltaTime);
             }
             else
@@ -278,9 +288,10 @@ public class PlayerController : MonoBehaviour
                 if (wasMovingLastFrame)
                 {
                     wasMovingLastFrame = false;
-                    moveSpeedToStop = moveSpeed; 
-                    moveTimer = 0f;             
+                    moveSpeedToStop = moveSpeed;
+                    moveTimer = 0f;
                 }
+
                 if (moveSpeedToStop > 0)
                 {
                     moveTimer += Time.deltaTime;
@@ -298,20 +309,46 @@ public class PlayerController : MonoBehaviour
             finalDesiredSpeed = desiredMoveDirection * ((moveSpeed - projectedAngle * angleDamping) * 10);
             rb.AddForce(finalDesiredSpeed, ForceMode.Force);
         }
-        
+
         // Can run along walls?
         if (rb.linearVelocity.magnitude < 25 && groundNormalAngle > 55)
         {
             transform.up = Vector3.up;
             groundNormal = Vector3.up;
         }
-        
+
         if (!isGrounded)
         {
             rb.AddForce(moveDirection * airMultiplier, ForceMode.Force);
             rb.linearDamping = 0.5f;
             Gravity();
         }
+        // Can Jump again?
+        if (!isBouncing && isGrounded)
+        {
+            isReadyToJump = true;
+        }
+        // Turbo has been activated?
+        if (hasTurboStarted)
+        {
+            rb.AddForce(LastSavedDirection * turboMultiplier, ForceMode.Force);
+        }
+        // IsBouncing?
+        if (isBouncing)
+        {
+            if (Physics.Raycast(transform.position, -transform.up, playerHeight * 0.5f * offsetBounce, groundLayer, QueryTriggerInteraction.Ignore))
+            {
+                 rb.AddForce(groundNormal.normalized * rb.linearVelocity.magnitude, ForceMode.Impulse);
+                 Invoke("LaunchBounce", 0.2f);
+            }
+        }
+    }
+
+    private void LaunchBounce()
+    {
+        isBouncing = false;
+        canGroundbeDeactivated = false;
+        isGrounded = false;
     }
 
     private void ControlSpeedVelocity()
@@ -374,16 +411,36 @@ public class PlayerController : MonoBehaviour
             isReadyToJump = false;
 
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-            //rb.linearVelocity = Vector3.Project(rb.linearVelocity, rb.transform.up);
-
-            //TODO Take into account for BunnyJump Mechanic
-            Invoke("ResetJump", jumpCooldown);
+            
         }
     }
 
-    private void ResetJump()
+    public void PlayerTurbo(InputAction.CallbackContext context)
     {
-        isReadyToJump = true;
+        if (context.started)
+        {
+            hasTurboStarted = true;
+            Debug.Log("Turbo STARTED");
+        }
+        else if (context.canceled)
+        {
+            hasTurboStarted = false;
+            Debug.Log("Turbo CANCELED");
+        }
+    }
+
+    public void PlayerBounce(InputAction.CallbackContext context)
+    {
+        if (context.performed && !isGrounded && !isBouncing)
+        {
+            isBouncing = true;
+            //deactivated conditions for ground
+            canGroundbeDeactivated = true;
+            //disable gravity
+            isGrounded = true;
+            //add down force
+            rb.AddForce(Vector3.down * playerGravityBounce, ForceMode.Impulse);
+        }
     }
 
     private void OnGUI()
