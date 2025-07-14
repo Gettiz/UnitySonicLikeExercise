@@ -6448,7 +6448,7 @@ GameObject:
   - component: {fileID: 230421803}
   - component: {fileID: 230421802}
   - component: {fileID: 230421801}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FrontVisor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21421,8 +21421,14 @@ GameObject:
   - component: {fileID: 1883213684}
   - component: {fileID: 1883213683}
   - component: {fileID: 1883213681}
+  - component: {fileID: 1883213690}
+  - component: {fileID: 1883213689}
+  - component: {fileID: 1883213688}
+  - component: {fileID: 1883213687}
+  - component: {fileID: 1883213686}
+  - component: {fileID: 1883213685}
   - component: {fileID: 1883213682}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -21514,16 +21520,50 @@ MonoBehaviour:
   TUIInGame:
     m_PersistentCalls:
       m_Calls: []
-  moveSpeed: 10
-  maxSpeed: 20
-  activeMaxSpeedCap: 1
-  vectorCameraToLookAt: {x: 0, y: 0, z: 0}
-  groundDamping: 5
-  playerRotationSpeed: 15
-  playerNormalRotationSpeed: 500
+  playerCollider: {fileID: 0}
+  rb: {fileID: 0}
+  playerHeight: 2
+  canGroundbeDeactivated: 0
+  isGrounded: 0
+  groundNormal: {x: 0, y: 0, z: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  lerpOffGround: 5
+  hasGroundedStarted: 1
+  hasGroundedStartedTimer: 1
+  groundNormalAngle: 0
   playerGravity: 50
-  playerGravityBounce: 50
-  offsetBounce: 1.2
+  groundDamping: 5
+  moveInput: {x: 0, y: 0}
+  playerInput: {fileID: 0}
+  cameraMain: {fileID: 1741779364}
+  moveDirection: {x: 0, y: 0, z: 0}
+  xRotationValue: 0
+  yRotationValue: 0
+  zRotationValue: 0
+  sensX: 0.25
+  sensY: 0.25
+  cameraInput: {x: 0, y: 0}
+  inputToCameraRotation: {x: 0, y: 0, z: 0, w: 0}
+  cameraLerpLagFollowRotation: 1
+  cameraLerpLagFollowRotationMultiplier: 5
+  cameraNormalToRotation: 0.1
+  cameraTargetPosition: {fileID: 1373072475}
+  cameraPositionDistance: 6
+  cameraPositionHeight: 0.5
+  velocityFollowPosition: {x: 0, y: 0, z: 0}
+  cameraLerpLagFollowPosition: 0.1
+  moveSpeed: 10
+  projectedMoveDirection: {x: 0, y: 0, z: 0}
+  projectedAngle: 0
+  wasMovingLastFrame: 0
+  LastSavedDirection: {x: 0, y: 0, z: 0}
+  maxSpeed: 20
+  maxSpeedTimer: 0.5
+  moveSpeedToStop: 0
+  moveTimer: 0
+  deaccelerationDuration: 1
   decelerationCurve:
     serializedVersion: 2
     m_Curve:
@@ -21539,8 +21579,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -21548,35 +21588,28 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  moveTimer: 0
-  hasGroundedStartedTimer: 1
-  lerpOffGround: 5
   angleDamping: 5
-  maxSpeedTimer: 0.5
-  deaccelerationDuration: 1
+  finalDesiredSpeed: {x: 0, y: 0, z: 0}
+  airMultiplier: 30
+  isBouncing: 0
+  offsetBounce: 1.2
+  playerGravityBounce: 100
+  isReadyToJump: 1
+  hasTurboStarted: 0
+  turboMultiplier: 100
+  activeMaxSpeedCap: 1
   OverSpeedBreak: 5
   momentumFriction: 5
-  turboMultiplier: 100
+  playerNormalRotationSpeed: 500
+  projectedLookDirection: {x: 0, y: 0, z: 0}
+  playerRotationSpeed: 15
   jumpForce: 20
-  jumpCooldown: 0.1
-  airMultiplier: 30
-  playerHeight: 2
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  cameraInput: {x: 0, y: 0}
-  inputToCameraPosition: {x: 0, y: 0, z: 0}
-  inputToCameraRotation: {x: 0, y: 0, z: 0, w: 0}
-  cameraLerpLagFollowRotation: 1
-  cameraLerpLagFollowRotationMultiplier: 5
-  cameraNormalToRotation: 0.1
-  cameraLerpLagFollowPosition: 0.1
-  cameraPositionDistance: 6
-  cameraPositionHeight: 0.5
-  cameraMain: {fileID: 1741779364}
-  cameraTargetPosition: {fileID: 1373072475}
-  sensX: 0.25
-  sensY: 0.25
+  groundCheckC: {fileID: 1883213686}
+  playerInputC: {fileID: 1883213685}
+  controlInputCameraC: {fileID: 1883213690}
+  ControlMovementC: {fileID: 1883213689}
+  ControlSpeedVelocityC: {fileID: 1883213687}
+  controlRotationC: {fileID: 1883213688}
 --- !u!114 &1883213682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21717,6 +21750,78 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1883213685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883213676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84ff5927c9da49e1a2916b12d505654e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1883213686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883213676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b21276fb1559481e9003c4d52fcab6ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1883213687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883213676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba1c89bbb2534bfaa0071fb36cdec9ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1883213688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883213676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f514e18d9db42a497aa71b671599be7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1883213689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883213676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a33655a39854edfb15d095f65f19b6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1883213690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1883213676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8daeb231d93f4255a0aba2fa700ca758, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2021371833
 GameObject:
   m_ObjectHideFlags: 0
