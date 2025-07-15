@@ -1,1 +1,1 @@
-First Attemp to do a sonic like physics
+First attempt to make a sonic-like in Unity
